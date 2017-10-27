@@ -20,6 +20,7 @@ var express = require('express');
 var session = require('express-session');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var path = require('path');
 var http = require('http');
 var util = require('util');
 var app = express();
@@ -27,6 +28,15 @@ var expressJWT = require('express-jwt');
 var jwt = require('jsonwebtoken');
 var bearerToken = require('express-bearer-token');
 var cors = require('cors');
+var unless = require('express-unless');
+var mysql=require('mysql');
+var pool = mysql.createPool({     
+  host     : 'localhost',       
+  user     : 'root',              
+  password : '123456',       
+  port: '3306',                   
+  database: 'fabricexplorer'
+}); 
 
 require('./config.js');
 var hfc = require('fabric-client');
@@ -51,19 +61,28 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
 	extended: false
 }));
+app.use(express.static(path.join(__dirname, 'public')));
+app.set('views', path.join(__dirname, 'views'));
+//app.set('view engine', 'ejs');
+app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'html');
 // set secret variable
 app.set('secret', 'thisismysecret');
 app.use(expressJWT({
 	secret: 'thisismysecret'
 }).unless({
-	path: ['/users']
+	path: ['/users/login','/users/register','/users/regvali',"/"]
 }));
 app.use(bearerToken());
 app.use(function(req, res, next) {
-	if (req.originalUrl.indexOf('/users') >= 0) {
+    var url=req.originalUrl;
+	if (url.indexOf('/users') >= 0) {
 		return next();
 	}
-
+	if(!req.token){
+		res.redirect('/users/login');
+		return;
+	}
 	var token = req.token;
 	jwt.verify(token, app.get('secret'), function(err, decoded) {
 		if (err) {
@@ -73,6 +92,7 @@ app.use(function(req, res, next) {
 					'token returned from /users call in the authorization header ' +
 					' as a Bearer token'
 			});
+            res.redirect('/users/login');
 			return;
 		} else {
 			// add the decoded user name and org name to the request object
@@ -105,38 +125,95 @@ function getErrorMessage(field) {
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////// REST ENDPOINTS START HERE ///////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
-// Register and enroll user
-app.post('/users', function(req, res) {
-	var username = req.body.username;
-	var orgName = req.body.orgName;
-	logger.debug('End point : /users');
-	logger.debug('User name : ' + username);
-	logger.debug('Org name  : ' + orgName);
-	if (!username) {
-		res.json(getErrorMessage('\'username\''));
-		return;
-	}
-	if (!orgName) {
-		res.json(getErrorMessage('\'orgName\''));
-		return;
-	}
-	var token = jwt.sign({
-		exp: Math.floor(Date.now() / 1000) + parseInt(hfc.getConfigSetting('jwt_expiretime')),
-		username: username,
-		orgName: orgName
-	}, app.get('secret'));
-	helper.getRegisteredUsers(username, orgName, true).then(function(response) {
-		if (response && typeof response !== 'string') {
-			response.token = token;
-			res.json(response);
-		} else {
-			res.json({
-				success: false,
-				message: response
-			});
-		}
-	});
+// 登录
+app.route('/users/login')
+ .get(function(req, res) {
+     res.render('login', { title: '用户登录' });
+ })
+.post(function(req, res) {
+    var sql='select * from fabricusers where username=?';
+    var username=req.body.username;
+    var password=req.body.password;
+    pool.query(sql,[username],function (err, result) {
+        if(err){
+          console.log('[SELECT ERROR] - ',err.message);
+          return;
+        }
+        if(result==null||result==''){
+            res.render('login',{loginerr:"nameerr"});
+        }else{
+            if(result[0].userpassword==password){
+                var user={
+                  username:result[0].username,
+                  password:result[0].userpassword,
+                  orgName:result[0].org
+                }
+                var token = jwt.sign({
+                exp: Math.floor(Date.now() / 1000) + parseInt(hfc.getConfigSetting('jwt_expiretime')),
+                username: user.username,
+                orgName: user.orgName
+                }, app.get('secret'));
+                helper.getRegisteredUsers(user.username, user.orgName, true).then(function(response) {
+                    if (response && typeof response !== 'string') {
+                        res.render('logapi',{token:token,user:user.username});
+                    } else {
+                        res.render('login',{loginerr:"valierr"});
+                    }
+                });
+            }else{
+                res.render('login',{loginerr:"pwderr"});
+            }
+        }
+    });
 });
+//注册验证账户唯一
+app.post('/users/regvali',function(req,res){
+    var username=req.body.username;
+    var sql='select userid from fabricusers where username=?';
+    pool.query(sql,[username],function(err,result){
+        if(err){
+          console.log('[SELECT ERROR] - ',err.message);
+          return;
+        }
+        //console.log(result);
+        if(result!=null&&result!=''){
+            res.json({err:'账户名已存在'});
+        }else{
+            res.json({err:''});
+        }
+    })
+})
+//用户注册
+app.route('/users/register')
+ .get(function(req, res) {
+     res.render('register', { title: '用户注册' });
+ })
+ .post(function(req, res) {
+     var user={
+         username: req.body.username,
+         password: req.body.password,
+         org:req.body.org,
+         phonenumber:req.body.phonenumber
+     }
+     var sql='insert into fabricusers values(0,?,?,?,?,10000)';
+     pool.query(sql,[user.username,user.password,user.phonenumber,user.org],function(err,result){
+        if(err){
+          console.log('[SELECT ERROR] - ',err.message);
+          return;
+        }
+        if(result.affectedRows=='1'){
+            res.redirect('/users/login');
+        }else{
+            res.redirect('/users/register');
+        }
+     });
+ });
+ 
+/* app.get('/logout', function(req, res) {
+     req.session.user = null;
+     res.redirect('/');
+ });*/
+ 
 // Create Channel
 app.post('/channels', function(req, res) {
 	logger.info('<<<<<<<<<<<<<<<<< C R E A T E  C H A N N E L >>>>>>>>>>>>>>>>>');
