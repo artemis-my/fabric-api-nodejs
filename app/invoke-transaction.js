@@ -32,6 +32,7 @@ var invokeChaincode = function(peerNames, channelName, chaincodeName, fcn, args,
 	var tx_id = null;
 
 	return helper.getRegisteredUsers(username, org).then((user) => {
+		args.push(username);
 		tx_id = client.newTransactionID();
 		logger.debug(util.format('Sending transaction "%j"', tx_id));
 		// send proposal to endorser

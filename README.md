@@ -170,7 +170,7 @@ curl -s -X POST \
   -H "content-type: application/json" \
   -d '{
 	"fcn":"uploadLog",
-	"args":["msc_20170613","900150983cd24fb0d6963f7d28e16f72","tom","tom"]
+	"args":["msc_20170613","900150983cd24fb0d6963f7d28e16f72"]
 }'
 ```
 **NOTE:** Ensure that you save the Transaction ID from the response in order to pass this string in the subsequent query transactions.

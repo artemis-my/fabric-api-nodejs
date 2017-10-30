@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+	 <head>
+	 <meta charset="utf-8">
+	 <title>mainpage</title>
+	 <!-- Bootstrap -->
+	 <link href="/css/bootstrap.min.css" rel="stylesheet" media="screen">
+	 <link href="/css/style.css" rel="stylesheet">
+	 <link href="/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
+     <link href="/css/bootstrap-table.min.css" rel="stylesheet">
+	 <script src="/js/jquery.min.js"></script>
+	 <script src="/js/bootstrap.min.js"></script>
+     <script src="/js/bootstrap-table.min.js"></script>
+     <script src="/js/bootstrap-table-zh-CN.min.js"></script>
+	 <style>
+.tab {
+	display: inline-block;
+	color: white;
+	font-size: 14px;
+	position: relative;
+	margin: 0 16px;
+	left: 100px
+}
+.al {
+	font-size: 12px;
+	margin: 0 4px
+}
+.aw {
+	color: white
+}
+.menu {
+	font-size: 16px;
+	color: white;
+	font-weight: 200
+}
+.btnb{background-color: #1C8AF4;color:white;}
+.input1{margin: 0 14px;border:solid 1px #dddddd;height: 32px}
+.rightbody{position:absolute;top:50px;left:180px;height: 100%;background-color: white;width: 100%}
+.bodydiv1{height:85px;position: relative;left:5%;top:30px;border: solid 1px #dddddd;padding: 25px;width: 80%}
+.btn2{color: #1C8AF4; background-color: white; border: solid 1px  #1C8AF4;}
+</style>
+	 </head>
+	 <body screen_capture_injected="true" style="padding:0 0; margin:0 0; background-color:#F8F9F9;">
+<div style="height:50px; background-color:#20283F; line-height:50px;"> <img src="/image/loginimg.svg" style="width:29px; height:21px;position:relative;left:12px;"> <a style="font-weight: 200;font-size: 18px;color:white;position:relative;left:10px;">区块链系统</a>
+       <div class="tab"> 物联网日志API </div>
+       <div class="tab"> 商品交易 </div>
+       <div style="float:right"> <a class="al aw">user</a> <a class="al aw">退出</a> </div>
+     </div>
+<nav class="navbar-default" style="height:100%;position:absolute; top:50px">
+       <div style="width:180px; background-color:#404C62; height:100%;" id="leftmenu">
+    <div style="height:8px"></div>
+    <ul class="nav" style="display:block">
+           <li> <a> <i class="fa fa-th-large"></i> <span class="menu">概览</span> </a> </li>
+           <li id="orderlog"> <a> <i class="fa fa-list-alt"></i> <span class="menu">日志管理</span> </a> </li>
+         </ul>
+  </div>
+</nav>
+<div class="rightbody" id="rightbody">
+	<div id="front">
+	<div class="bodydiv1">
+		<div style="float:left;color: black;width: 800px">
+			日志名<input type="text" placeholder="请输入..." id="logname" class="input1">
+			用户名<input type="text" placeholder="请输入..." id="username" class="input1">
+		</div>
+		<div style="display: inline-block;position: relative;left: 10px">
+			<button class="btn btnb" id="getlog">查询日志</button>
+		</div>
+	</div>
+	<div style="position: relative;top:30px;left: 5%;margin: 20px 0">
+		<button class="btn btnb" id="sendbtn">
+			上传日志
+		</button>
+		<button class="btn btn2">删除日志</button>
+	</div>
+	<div style="position: relative;top:20px;width:80%;left:5%">
+        <table data-toggle="table" class="table-striped">
+        	<colgroup>
+        		<col style="width:10%">
+				<col style="width:15%">
+				<col style="width:35%">
+				<col style="width:15%">
+				<col style="width:15%">
+				<col style="width:10%">
+			</colgroup>
+		    <thead style="background-color:#F8F9F9;border-bottom: solid 2px #dddddd">
+		        <tr style="">
+		        	<th><input type="checkbox"></th>
+		            <th>日志名</th>
+		            <th>日志内容</th>
+		            <th>上传时间</th>
+		            <th>用户名</th>
+		            <th>操作</th>
+		        </tr>
+		    </thead>
+		    <tbody id="loglist">
+		        <tr>
+		        	<td></td>
+		            <td>1</td>
+		            <td>Item 1</td>
+		            <td>$1</td>
+		            <td></td>
+		            <td><a style="margin:0 5px;">查看</a><a style="margin:0 5px;">删除</a></td>
+		        </tr>
+		    </tbody>
+		</table>
+      </div>
+  </div>
+      <div id="sendlogdiv" style="display: none;">
+      	<div style="border-bottom: solid 1px #dddddd;margin: 30px;padding: 10px;font-size: 16px">
+      		上传日志
+      	</div>
+      	<div style="margin: 30px;">
+      		<div style="margin: 30px;">日志名<input type="text" id="logname2" placeholder="请输入..." ></div>
+      		<div style="margin: 30px;">账户<input type="text" name="" id="account" placeholder="请输入..."></div>
+      		<div style="margin: 30px;">日志内容<div style="width: 800px;height: 80px;border:dashed 1px #dddddd;text-align: center;display: inline-block;"><input type="file" style="display: none;"><a style="line-height: 80px">上传附件</a></div></div>
+      		<div style="margin: 30px;"><textarea style="width: 800px;height: 400px;" id="log2"></textarea></div>
+      		<input type="button" class="btn btnb" id="sendlog" value="提交">
+      		<input type="button" class="btn btn2" id="cancel" value="取消">
+      	</div>
+
+      </div>
+     </div>
+<script type="text/javascript">
+	$(function(){
+		sessionStorage.token="<%=token%>";
+		var user="<%=user%>";
+		$("#user").text(user);
+		$("#loglist").empty();
+		$.ajax({
+			type:"get",
+			url:"/channels/mychannel/chaincodes/mycc?peer=peer1&fcn=queryLogsByUser&args=%5B%22jenify%22%5D",
+			dataType:"text",
+			beforeSend:function(xhr){
+				xhr.setRequestHeader("authorization","Bearer "+sessionStorage.token);
+				xhr.setRequestHeader("content-type","application/json");
+			},
+			success:function(data){
+console.log(data);
+var st=data.indexOf("[");
+var end=data.indexOf("]");
+var newdata=data.substring(st,end+1);
+var jsdata=JSON.parse(newdata);
+				for(var i=0;i<jsdata.length;i++){
+					var record=jsdata[i].Record;
+console.log(record.name);
+					var $trs=$("<tr><td><input type='checkbox'></td><td>"+record.name+"</td><td>"+record.logContent+"</td><td>"+record.uploadTime+"</td><td>"+record.user+"</td><td><a style='margin:0 5px;'>查看</a><a style='margin:0 5px;'>删除</a></td></tr>");
+					$("#loglist").append($trs);
+				}
+			},
+error:function(data){
+console.log(data);
+}	
+		});
+		$("#sendbtn").click(function(){
+			$("#front").hide();
+			$("#sendlogdiv").show();
+		});
+		$("#sendlog").click(function(){
+			var logname=$("#logname2").val();
+			var account=$("#account").val();
+			var logg=$("#log2").val();
+			var time=new Date();
+			var arg=[logname,logg];
+			var token=sessionStorage.token;
+			$.ajax({
+				type:"post",
+				url:"/channels/mychannel/chaincodes/mycc",
+				data:JSON.stringify({"args":arg,"fcn":"uploadLog"}),
+				dataType:"json",
+				beforeSend:function(xhr){
+					xhr.setRequestHeader("authorization","Bearer "+token);
+					xhr.setRequestHeader("content-type","application/json");
+				},
+				success:function(data){
+					if(data!=null){
+						alert("上传成功");
+					}
+					$("#front").show();
+					$("#sendlogdiv").hide();
+				}
+			})
+		});
+		$("#cancel").click(function(){
+			$("#front").show();
+			$("#sendlogdiv").hide();
+		});
+	})
+	</script>
+</body>
+</html>

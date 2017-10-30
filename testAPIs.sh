@@ -1,4 +1,5 @@
 #!/bin/bash
+
 #
 # Copyright IBM Corp. All Rights Reserved.
 #
@@ -128,7 +129,7 @@ TRX_ID=$(curl -s -X POST \
   -H "content-type: application/json" \
   -d '{
 	"fcn":"uploadLog",
-	"args":["msc_20170613","900150983cd24fb0d6963f7d28e16f72","tom","tom"]
+	"args":["msc_20170613","900150983cd24fb0d6963f7d28e16f72"]
 }')
 echo "Transacton ID is $TRX_ID"
 echo
@@ -160,20 +161,6 @@ curl -s -X GET http://localhost:4000/channels/mychannel/transactions/$TRX_ID?pee
 echo
 echo
 
-############################################################################
-### TODO: What to pass to fetch the Block information
-############################################################################
-#echo "GET query Block by Hash"
-#echo
-#hash=????
-#curl -s -X GET \
-#  "http://localhost:4000/channels/mychannel/blocks?hash=$hash&peer=peer1" \
-#  -H "authorization: Bearer $ORG1_TOKEN" \
-#  -H "cache-control: no-cache" \
-#  -H "content-type: application/json" \
-#  -H "x-access-token: $ORG1_TOKEN"
-#echo
-#echo
 
 echo "GET query ChainInfo"
 echo
