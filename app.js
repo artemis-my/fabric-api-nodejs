@@ -244,6 +244,15 @@ app.route('/users/register')
      req.session.user = null;
      res.redirect('/');
  });*/
+ //请求页面
+ app.get('/left',function(req,res){
+ 	var topic=req.query.menu;
+ 	if(topic=="log"){
+ 		res.render('leftlog');
+ 	}else if(topic=="product"){
+ 		res.render('leftproduct');
+ 	}
+ });
  
 // Create Channel
 app.post('/channels', function(req, res) {

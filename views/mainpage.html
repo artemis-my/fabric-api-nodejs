@@ -12,10 +12,12 @@
 	 <script src="/js/bootstrap.min.js"></script>
      <script src="/js/bootstrap-table.min.js"></script>
      <script src="/js/bootstrap-table-zh-CN.min.js"></script>
+     <script type="text/javascript" src="/js/mainpage.js"></script>
      <script type="text/javascript">
      		sessionStorage.token="<%=token%>";
 		sessionStorage.user="<%=user%>";
      </script>
+
 	 <style>
 .tab {
 	display: inline-block;
@@ -47,8 +49,8 @@ td{overflow:hidden;white-space:nowrap;text-overflow: ellipsis}
 	 </head>
 	 <body screen_capture_injected="true" style="padding:0 0; margin:0 0; background-color:#F8F9F9;">
 <div style="height:50px; background-color:#20283F; line-height:50px;"> <img src="/image/loginimg.svg" style="width:29px; height:21px;position:relative;left:12px;"> <a style="font-weight: 200;font-size: 18px;color:white;position:relative;left:10px;">区块链系统</a>
-       <div class="tab"> 物联网日志API </div>
-       <div class="tab"> 商品交易 </div>
+       <div class="tab" id="logapi"> 物联网日志API </div>
+       <div class="tab" id="protransaction"> 商品交易 </div>
        <div style="float:right"> <a class="al aw" id="user">user</a> <a class="al aw">退出</a> </div>
      </div>
 <nav class="navbar-default" style="height:100%;position:absolute; top:50px">
