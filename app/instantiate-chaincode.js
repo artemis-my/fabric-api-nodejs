@@ -102,7 +102,7 @@ var instantiateChaincode = function(channelName, chaincodeName, chaincodeVersion
 				let handle = setTimeout(() => {
 					eh.disconnect();
 					reject();
-				}, 30000);
+				}, 60000);
 
 				eh.registerTxEvent(deployId, (tx, code) => {
 					logger.info(
