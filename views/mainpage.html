@@ -44,7 +44,7 @@
 <div style="height:50px; background-color:#20283F; line-height:50px;"> <img src="/image/loginimg.svg" style="width:29px; height:21px;position:relative;left:12px;"> <a style="font-weight: 200;font-size: 18px;color:white;position:relative;left:10px;">区块链系统</a>
        <div class="tab"> 物联网日志API </div>
        <div class="tab"> 商品交易 </div>
-       <div style="float:right"> <a class="al aw">user</a> <a class="al aw">退出</a> </div>
+       <div style="float:right"> <a class="al aw" id="user">user</a> <a class="al aw">退出</a> </div>
      </div>
 <nav class="navbar-default" style="height:100%;position:absolute; top:50px">
        <div style="width:180px; background-color:#404C62; height:100%;" id="leftmenu">
@@ -123,58 +123,35 @@
 <script type="text/javascript">
 	$(function(){
 		sessionStorage.token="<%=token%>";
-		var user="<%=user%>";
-		$("#user").text(user);
-		$("#loglist").empty();
-		$.ajax({
-			type:"get",
-			url:"/channels/mychannel/chaincodes/mycc?peer=peer1&fcn=queryLogsByUser&args=%5B%22jenify%22%5D",
-			dataType:"text",
-			beforeSend:function(xhr){
-				xhr.setRequestHeader("authorization","Bearer "+sessionStorage.token);
-				xhr.setRequestHeader("content-type","application/json");
-			},
-			success:function(data){
-console.log(data);
-var st=data.indexOf("[");
-var end=data.indexOf("]");
-var newdata=data.substring(st,end+1);
-var jsdata=JSON.parse(newdata);
-				for(var i=0;i<jsdata.length;i++){
-					var record=jsdata[i].Record;
-console.log(record.name);
-					var $trs=$("<tr><td><input type='checkbox'></td><td>"+record.name+"</td><td>"+record.logContent+"</td><td>"+record.uploadTime+"</td><td>"+record.user+"</td><td><a style='margin:0 5px;'>查看</a><a style='margin:0 5px;'>删除</a></td></tr>");
-					$("#loglist").append($trs);
-				}
-			},
-error:function(data){
-console.log(data);
-}	
-		});
+		sessionStorage.user="<%=user%>";
+		$("#user").html(sessionStorage.user);
+		getAllLog();
 		$("#sendbtn").click(function(){
 			$("#front").hide();
 			$("#sendlogdiv").show();
 		});
 		$("#sendlog").click(function(){
 			var logname=$("#logname2").val();
-			var account=$("#account").val();
 			var logg=$("#log2").val();
-			var time=new Date();
 			var arg=[logname,logg];
 			var token=sessionStorage.token;
 			$.ajax({
 				type:"post",
 				url:"/channels/mychannel/chaincodes/mycc",
 				data:JSON.stringify({"args":arg,"fcn":"uploadLog"}),
-				dataType:"json",
+				dataType:"text",
 				beforeSend:function(xhr){
 					xhr.setRequestHeader("authorization","Bearer "+token);
 					xhr.setRequestHeader("content-type","application/json");
 				},
 				success:function(data){
-					if(data!=null){
+					console.log(data);
+					if(data.indexOf("Fail")!=-1||data.indexOf("Error")!=-1){
+						alert("上传失败");
+					}else{
 						alert("上传成功");
 					}
+getAllLog();
 					$("#front").show();
 					$("#sendlogdiv").hide();
 				}
@@ -184,7 +161,35 @@ console.log(data);
 			$("#front").show();
 			$("#sendlogdiv").hide();
 		});
-	})
+	});
+function getAllLog(){
+$("#loglist").empty();
+		$.ajax({
+			type:"get",
+			url:"/channels/mychannel/chaincodes/mycc?peer=peer1&fcn=queryLogsByUser&args=%5B%22"+sessionStorage.user+"%22%5D",
+			dataType:"text",
+			beforeSend:function(xhr){
+				xhr.setRequestHeader("authorization","Bearer "+sessionStorage.token);
+				xhr.setRequestHeader("content-type","application/json");
+			},
+			success:function(data){
+				console.log(data);
+				var st=data.indexOf("[");
+				var end=data.indexOf("]");
+				var newdata=data.substring(st,end+1);
+				var jsdata=JSON.parse(newdata);
+				for(var i=0;i<jsdata.length;i++){
+					var record=jsdata[i].Record;
+					console.log(record.name);
+					var $trs=$("<tr><td><input type='checkbox'></td><td>"+record.name+"</td><td>"+record.logContent+"</td><td>"+record.uploadTime+"</td><td>"+record.user+"</td><td><a style='margin:0 5px;'>查看</a><a style='margin:0 5px;'>删除</a></td></tr>");
+					$("#loglist").append($trs);
+				}
+			},
+error:function(data){
+console.log(data);
+}	
+		});
+}
 	</script>
 </body>
 </html>
