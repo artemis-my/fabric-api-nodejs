@@ -244,13 +244,28 @@ app.route('/users/register')
      req.session.user = null;
      res.redirect('/');
  });*/
- //请求页面
+  //请求菜单页面
  app.get('/left',function(req,res){
  	var topic=req.query.menu;
  	if(topic=="log"){
  		res.render('leftlog');
  	}else if(topic=="product"){
  		res.render('leftproduct');
+ 	}
+ });
+ //请求主体界面
+ app.get('/right',function(req,res){
+ 	var topic=req.query.menu;
+ 	if(topic=="orderlog"){
+ 		res.render('rightlog');
+ 	}else if(topic=="explorer"){
+ 		res.render('rightexplorer');
+ 	}else if(topic=="orderproduct"){
+ 		res.render('rightorderproduct');
+ 	}else if(topic=="producttransaction"){
+ 		res.render('rightproducttransaction');
+ 	}else if(topic=="accountinfo"){
+ 		res.render('rightaccountinfo');
  	}
  });
  

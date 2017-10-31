@@ -1,9 +1,26 @@
 $(function(){
 	$("#logapi").click(function(){
 		getleft("log");
+		getright("orderlog");
 	});
 	$("#protransaction").click(function(){
 		getleft("product");
+		getright("orderproduct");
+	});
+	$("#leftmenu").on('click','#explorer',function(){
+		getright("explorer");
+	});
+	$("#leftmenu").on('click','#orderlog',function(){
+		getright("orderlog");
+	});
+	$("#leftmenu").on('click','#orderproduct',function(){
+		getright("orderproduct");
+	});
+	$("#leftmenu").on('click','#producttransaction',function(){
+		getright("producttransaction");
+	});
+	$("#leftmenu").on('click','#accountinfo',function(){
+		getright("accountinfo");
 	});
 
 });
