@@ -14,7 +14,7 @@
 			var arg=[logname,logg];
 			$.ajax({
 				type:"post",
-				url:"/channels/mychannel/chaincodes/mycc",
+				url:"/channels/logchannel/chaincodes/mycc",
 				data:JSON.stringify({"args":arg,"fcn":"uploadLog"}),
 				dataType:"text",
 				beforeSend:function(xhr){
@@ -98,7 +98,7 @@
 	function delOneLog(name){
 		$.ajax({
 				type:"post",
-				url:"/channels/mychannel/chaincodes/mycc",
+				url:"/channels/logchannel/chaincodes/mycc",
 				data:JSON.stringify({"args":[name],"fcn":"deleteLog"}),
 				dataType:"text",
 				beforeSend:function(xhr){
@@ -121,7 +121,7 @@ function getAllLog(fcn,args){
 $("#loglist").empty();
 		$.ajax({
 			type:"get",
-			url:"/channels/mychannel/chaincodes/mycc?peer=peer1&fcn="+fcn+"&args=%5B%22"+args+"%22%5D",
+			url:"/channels/logchannel/chaincodes/mycc?peer=peer1&fcn="+fcn+"&args=%5B%22"+args+"%22%5D",
 			dataType:"text",
 			beforeSend:function(xhr){
 				xhr.setRequestHeader("authorization","Bearer "+sessionStorage.token);

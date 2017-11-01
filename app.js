@@ -71,7 +71,7 @@ app.set('secret', 'thisismysecret');
 app.use(expressJWT({
 	secret: 'thisismysecret'
 }).unless({
-	path: ['/users/login','/users/register','/users/regvali',"/","/users"]
+	path: ['/users/login','/users/register','/users/regvali',"/","/users","/favicon.ico"]
 }));
 app.use(bearerToken());
 app.use(function(req, res, next) {

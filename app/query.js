@@ -23,7 +23,7 @@ var config = require('../config.json');
 var helper = require('./helper.js');
 var logger = helper.getLogger('Query');
 
-var queryChaincode = function(peer, channelName, chaincodeName, args, fcn, username, org) {
+var queryChaincode = function(peer, channelName, chaincodeName, args, fcn, startKey, endKey, username, org) {
 	var channel = helper.getChannelForOrg(org);
 	var client = helper.getClientForOrg(org);
 	var target = buildTarget(peer, org);
@@ -43,12 +43,32 @@ var queryChaincode = function(peer, channelName, chaincodeName, args, fcn, usern
 			err;
 	}).then((response_payloads) => {
 		if (response_payloads) {
-			for (let i = 0; i < response_payloads.length; i++) {
-				logger.info(args[0]+' now has ' + response_payloads[i].toString('utf8') +
-					' after the move');
-				return args[0]+' now has ' + response_payloads[i].toString('utf8') +
-					' after the move';
+			var response_list = response_payloads[0].toString('utf8');
+			if (response_list.indexOf("Key") > 0) {
+				response_list = JSON.parse(response_list);
+				var result = new Array();
+				logger.debug(response_list);
+				if (!startKey) {
+					startKey = 0;
+				}
+				if (!endKey) {
+					endKey = response_list.length;
+				}
+				logger.debug(startKey);
+				logger.debug(endKey);
+				if (endKey > response_list.length) {
+					maxKey = response_list.length;
+				} else {
+					maxKey = endKey;
+				}
+				for (let i = startKey; i < maxKey; i++) {
+					result.push('{"Key":"' + response_list[i].Key +'", "Record":{"docType":"' + response_list[i].Record.docType +'","name":"' + response_list[i].Record.name +'","property":"' + response_list[i].Record.property +'","owner":"' + response_list[i].Record.owner +'","price":"' + response_list[i].Record.price +'"}}')
+				}
+			} else {
+				result = response_payloads[0].toString('utf8');
 			}
+			
+			return args[0]+' now has [ ' + result +'] after the move';
 		} else {
 			logger.error('response_payloads is null');
 			return 'response_payloads is null';

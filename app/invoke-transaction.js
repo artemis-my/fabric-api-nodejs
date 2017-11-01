@@ -32,8 +32,10 @@ var invokeChaincode = function(peerNames, channelName, chaincodeName, fcn, args,
 	var tx_id = null;
 
 	return helper.getRegisteredUsers(username, org).then((user) => {
-		if (fcn != "deleteLog")
+		if (fcn != "deleteLog") {
+			logger.debug("fcn != deleteLog");
 			args.push(username);
+		}
 		tx_id = client.newTransactionID();
 		logger.debug(util.format('Sending transaction "%j"', tx_id));
 		// send proposal to endorser
