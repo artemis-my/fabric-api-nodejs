@@ -14,7 +14,7 @@
 			var arg=[logname,logg];
 			$.ajax({
 				type:"post",
-				url:"/channels/logchannel/chaincodes/mycc",
+				url:"/channels/logchannel/chaincodes/logcc",
 				data:JSON.stringify({"args":arg,"fcn":"uploadLog"}),
 				dataType:"text",
 				beforeSend:function(xhr){
@@ -40,6 +40,7 @@
 		});
 		$("#dellog").click(function(){
 			$("#downtips").show();
+			$("#downtips2").show();
 		});
 		$("#seltotal").click(function(){
 			if($(this).is(':checked')){
@@ -58,14 +59,17 @@
 				}
 			}
 			$("#downtips").hide();
+			$("#downtips2").hide();
 			getAllLog("queryLogsByUser",sessionStorage.user);
 		});
 		$("#canceldel").click(function(){
 			$("#downtips").hide();
+			$("#downtips2").hide();
 		});
 		$("#loglist").on("click",".delone",function(){
 			$(this).parent().parent().children(":first").children().attr("checked",true);
 			$("#downtips").show();
+			$("#downtips2").show();
 		});
 		$("#loglist").on("click",".look",function(){
 			var infoname=$(this).parent().parent().children("td").eq(1).html();
@@ -98,7 +102,7 @@
 	function delOneLog(name){
 		$.ajax({
 				type:"post",
-				url:"/channels/logchannel/chaincodes/mycc",
+				url:"/channels/logchannel/chaincodes/logcc",
 				data:JSON.stringify({"args":[name],"fcn":"deleteLog"}),
 				dataType:"text",
 				beforeSend:function(xhr){
@@ -121,7 +125,7 @@ function getAllLog(fcn,args){
 $("#loglist").empty();
 		$.ajax({
 			type:"get",
-			url:"/channels/logchannel/chaincodes/mycc?peer=peer1&fcn="+fcn+"&args=%5B%22"+args+"%22%5D",
+			url:"/channels/logchannel/chaincodes/logcc?peer=peer1&fcn="+fcn+"&args=%5B%22"+args+"%22%5D",
 			dataType:"text",
 			beforeSend:function(xhr){
 				xhr.setRequestHeader("authorization","Bearer "+sessionStorage.token);

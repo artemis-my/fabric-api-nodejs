@@ -24,8 +24,17 @@
 				<col style="width:15%">
 				<col style="width:10%">
 			</colgroup>
-		    <thead style="background-color:#F8F9F9;border-bottom: solid 2px #dddddd"><tr><th style="" data-field="0" tabindex="0"><div class="th-inner "><input type="checkbox" id="seltotal"></div><div class="fht-cell"></div></th><th style="" data-field="1" tabindex="0"><div class="th-inner ">日志名</div><div class="fht-cell"></div></th><th style="" data-field="2" tabindex="0"><div class="th-inner ">日志内容</div><div class="fht-cell"></div></th><th style="" data-field="3" tabindex="0"><div class="th-inner ">上传时间</div><div class="fht-cell"></div></th><th style="" data-field="4" tabindex="0"><div class="th-inner ">用户名</div><div class="fht-cell"></div></th><th style="" data-field="5" tabindex="0"><div class="th-inner ">操作</div><div class="fht-cell"></div></th></tr></thead>
-		    <tbody id="loglist"><tr><td><input type="checkbox" class="tlog" pid="0"></td><td>123456</td><td>123123123312331241244444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444</td><td>2017-10-31 19:16:37</td><td>jenify</td><td><a style="margin:0 5px;" class="look">查看</a><a style="margin:0 5px;" class="delone">删除</a></td></tr></tbody>
+		    <thead style="background-color:#F8F9F9;border-bottom: solid 2px #dddddd">
+		    	<tr><th style="" data-field="0" tabindex="0"><div class="th-inner "><input type="checkbox" id="seltotal"></div><div class="fht-cell"></div></th>
+		    		<th style="" data-field="1" tabindex="0"><div class="th-inner ">日志名</div><div class="fht-cell"></div></th>
+		    		<th style="" data-field="2" tabindex="0"><div class="th-inner ">日志内容</div><div class="fht-cell"></div></th>
+		    		<th style="" data-field="3" tabindex="0"><div class="th-inner ">上传时间</div><div class="fht-cell"></div></th>
+		    		<th style="" data-field="4" tabindex="0"><div class="th-inner ">用户名</div><div class="fht-cell"></div></th>
+		    		<th style="" data-field="5" tabindex="0"><div class="th-inner ">操作</div><div class="fht-cell"></div></th></tr>
+		    </thead>
+		    <tbody id="loglist">
+		    	
+		    </tbody>
 		</table></div><div class="fixed-table-footer" style="display: none;"><table><tbody><tr></tr></tbody></table></div><div class="fixed-table-pagination" style="display: none;"></div></div></div><div class="clearfix"></div>
       </div>
   </div>
@@ -42,19 +51,20 @@
       	</div>
       </div>
        <div id="downtips" style="display: none;position: absolute;top:0;left: 0;width: 100%;height: 100%;z-index: 10;background-color: #cccccc;filter:alpha(Opacity=60);-moz-opacity:0.6;opacity: 0.6;">
-      	<div style="width: 600px;height: 220px;position: fixed;left: 30%;top: 30%;text-align: center;background-color: white;">
-      		<div>
-      			删除日志
-      		</div>
-      		<div style="border-top: solid 1px #dddddd;border-bottom: solid 1px #dddddd;height: 160px;line-height: 160px;">
-      			确定删除所选日志？<span id="sellog"></span>
-      		</div>
-      		<div>
-      			<input type="button" class="btn btnb" id="dellog3" value="确定">
-      			<input type="button" class="btn btn2" id="canceldel" value="取消">
-      		</div>
-      	</div>
+      	
       </div>
+      <div id="downtips2" style="width: 600px;height: 220px;position: absolute;left: 30%;top: 30%;text-align: center;background-color: white;z-index: 20;display: none;">
+          <div>
+            删除日志
+          </div>
+          <div style="border-top: solid 1px #dddddd;border-bottom: solid 1px #dddddd;height: 160px;line-height: 160px;">
+            确定删除所选日志？<span id="sellog"></span>
+          </div>
+          <div>
+            <input type="button" class="btn btnb" id="dellog3" value="确定">
+            <input type="button" class="btn btn2" id="canceldel" value="取消">
+          </div>
+        </div>
       <div id="oneloginfo" style="display: none;position: absolute;left: 30%;top: 30%;width: 600px;height: 800px;z-index: 20;background-color:white;">
       	<span style="float: right;" id="closeinfo">关闭</span>
       	<div style="text-align: center;margin: 10px 0;word-wrap:break-word;" id="infologname">

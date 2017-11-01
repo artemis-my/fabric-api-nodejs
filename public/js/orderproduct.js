@@ -26,6 +26,7 @@ $(function(){
 	});
 	$("#downitem").click(function(){
 		$("#downtips").show();
+		$("#downtips2").show();
 	});
 	$("#downitem2").click(function(){
 		var titems=$(".titems");
@@ -39,13 +40,18 @@ $(function(){
 			}
 			alert("删除成功");
 			$("#downtips").hide();
+			$("#downtips2").hide();
 			//getAllItem("queryLogsByUser",sessionStorage.user);
+	});
+	$("#canceldown").click(function(){
+		$("#downtips").hide();
+		$("#downtips2").hide();
 	});
 })
 function getOneItem(name){
 	$.ajax({
 		type:"get",
-		url:"/channels/itemchannel/chaincodes/itemcc?peer=peer1&fcn=queryItemsByItemPropertyOwner&args=%5B%22"+name+"%22%2c%22%22%2c%22"+sessionStorage.user+"%22%5D",
+		url:"/channels/itemchannel/chaincodes/itemcc?peer=peer1&fcn=queryItemsByItemOwner&args=%5B%22"+name+"%22%2c%22%22%2c%22"+sessionStorage.user+"%22%5D",
 		dataType:"text",
 		beforeSend:function(xhr){
 				xhr.setRequestHeader("authorization","Bearer "+sessionStorage.token);
@@ -98,5 +104,20 @@ function delOneItem(args){
 		error:function(data){
 
 		}
+	})
+}
+function getOwnerItem(){
+	$.ajax({
+		type:"get",
+		url:"/channels/itemchannel/chaincodes/itemcc?peer=peer1&fcn=queryItemsByItemOwner&args=%5B%22%22%2c%22%22%2c%22"+sessionStorage.user+"%22%5D",
+		dataType:"text",
+		beforeSend:function(xhr){
+				xhr.setRequestHeader("authorization","Bearer "+sessionStorage.token);
+				xhr.setRequestHeader("content-type","application/json");
+			},
+		success:function(data){
+
+		},
+
 	})
 }
