@@ -33,6 +33,7 @@ var invokeChaincode = function(peerNames, channelName, chaincodeName, fcn, args,
 
 	return helper.getRegisteredUsers(username, org).then((user) => {
 		if (fcn != "deleteLog") {
+			logger.debug("fcn != deleteLog");
 			args.push(username);
 		}
 		tx_id = client.newTransactionID();

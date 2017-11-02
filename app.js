@@ -421,11 +421,15 @@ app.get('/channels/:channelName/chaincodes/:chaincodeName', function(req, res) {
 	let args = req.query.args;
 	let fcn = req.query.fcn;
 	let peer = req.query.peer;
+	let startKey = req.query.startKey;
+	let endKey = req.query.endKey;
 
 	logger.debug('channelName : ' + channelName);
 	logger.debug('chaincodeName : ' + chaincodeName);
 	logger.debug('fcn : ' + fcn);
 	logger.debug('args : ' + args);
+	logger.debug('startKey : ' + startKey);
+	logger.debug('end : ' + endKey);
 
 	if (!chaincodeName) {
 		res.json(getErrorMessage('\'chaincodeName\''));
@@ -443,15 +447,13 @@ app.get('/channels/:channelName/chaincodes/:chaincodeName', function(req, res) {
 		res.json(getErrorMessage('\'args\''));
 		return;
 	}
-        if (!args) {
-                res.json(getErrorMessage('\'args\''));
-                return;
-        }
+
 	args = args.replace(/'/g, '"');
+
 	args = JSON.parse(args);
 	logger.debug(args);
 
-	query.queryChaincode(peer, channelName, chaincodeName, args, fcn, req.username, req.orgname)
+	query.queryChaincode(peer, channelName, chaincodeName, args, fcn, startKey, endKey, req.username, req.orgname)
 	.then(function(message) {
 		res.send(message);
 	});

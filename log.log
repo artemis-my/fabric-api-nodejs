@@ -1,0 +1,10 @@
+[36m[2017-10-17 15:56:20.603] [DEBUG] Helper - [39m[crypto_ecdsa_aes]: constructor, keySize: 256
+[36m[2017-10-17 15:56:20.606] [DEBUG] Helper - [39m[crypto_ecdsa_aes]: Hash algorithm: SHA2, hash output size: 256
+[36m[2017-10-17 15:56:20.688] [DEBUG] Helper - [39m[utils.CryptoKeyStore]: CryptoKeyStore, constructor - start
+[36m[2017-10-17 15:56:20.689] [DEBUG] Helper - [39m[utils.CryptoKeyStore]: constructor, no super class specified, using config: fabric-client/lib/impl/FileKeyValueStore.js
+[36m[2017-10-17 15:56:20.695] [DEBUG] Helper - [39m[crypto_ecdsa_aes]: constructor, keySize: 256
+[36m[2017-10-17 15:56:20.695] [DEBUG] Helper - [39m[crypto_ecdsa_aes]: Hash algorithm: SHA2, hash output size: 256
+[36m[2017-10-17 15:56:20.695] [DEBUG] Helper - [39m[utils.CryptoKeyStore]: CryptoKeyStore, constructor - start
+[36m[2017-10-17 15:56:20.696] [DEBUG] Helper - [39m[utils.CryptoKeyStore]: constructor, no super class specified, using config: fabric-client/lib/impl/FileKeyValueStore.js
+[32m[2017-10-17 15:56:20.717] [INFO] SampleWebApp - [39m****************** SERVER STARTED ************************
+[32m[2017-10-17 15:56:20.717] [INFO] SampleWebApp - [39m**************  http://localhost:4000  ******************

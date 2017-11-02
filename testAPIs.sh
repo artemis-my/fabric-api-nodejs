@@ -168,7 +168,7 @@ echo
 echo "GET query chaincode on peer1 of Org1"
 echo
 curl -s -X GET \
-  "http://localhost:4000/channels/itemchannel/chaincodes/itemcc?peer=peer1&fcn=queryItemsByItemOwner&args=%5B%22%22%2c%22%22%2c%22Jim%22%5D&startKey=0&endKey=3" \
+  "http://localhost:4000/channels/itemchannel/chaincodes/itemcc?peer=peer1&fcn=queryItemsByItemPropertyOwner&args=%5B%22%22%2c%22%22%2c%22Jim%22%5D&startKey=0&endKey=3" \
   -H "authorization: Bearer $ORG1_TOKEN" \
   -H "content-type: application/json"
 echo
