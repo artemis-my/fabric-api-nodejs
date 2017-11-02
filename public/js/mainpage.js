@@ -3,13 +3,17 @@ $(function(){
 	$("#logapi").click(function(){
 		getleft("log");
 		getright("orderlog");
-	});
+	}).hover(over,out);
 	$("#protransaction").click(function(){
 		getleft("product");
 		getright("orderproduct");
-	});
+	}).hover(over,out);
 	$("#leftmenu").on('click','#explorer',function(){
-		getright("explorer");
+		$("#rightbody").empty();
+		//$("#rightbody").html("<iframe width=800px height=800px src=></iframe>")
+		$explo=$("<iframe width=100% height=100%></iframe>");
+		$explo.attr("src","//172.20.29.20:8080/");
+		$("#rightbody").append($explo);
 	});
 	$("#leftmenu").on('click','#orderlog',function(){
 		getright("orderlog");
@@ -62,4 +66,10 @@ function getright(topic){
 			}
 	});
 
+}
+function over(){
+	$(this).addClass("cur");
+}
+function out(){
+	$(this).removeClass("cur");
 }

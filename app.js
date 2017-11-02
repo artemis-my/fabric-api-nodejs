@@ -23,6 +23,7 @@ var bodyParser = require('body-parser');
 var path = require('path');
 var http = require('http');
 var util = require('util');
+var async=require('async');
 var app = express();
 var expressJWT = require('express-jwt');
 var jwt = require('jsonwebtoken');
@@ -262,7 +263,17 @@ app.route('/users/register')
  	if(topic=="orderlog"){
  		res.render('rightlog');
  	}else if(topic=="explorer"){
- 		res.render('rightexplorer');
+	var opt = {  
+         host:'172.20.29.20',  
+         port:'8080',  
+         method:'GET',  
+         path:'/'  
+    	};
+	var sreq=http.request(opt,function(sres){
+	sres.pipe(res);
+	});
+	req.pipe(sreq);
+ 		//res.render('rightexplorer');
  	}else if(topic=="orderproduct"){
  		res.render('rightorderproduct');
  	}else if(topic=="producttransaction"){
@@ -559,3 +570,126 @@ app.get('/channels', function(req, res) {
 		res.send(message);
 	});
 });
+app.get('/getallinfo/channels/:channelName/chaincodes/:chaincodeName',function(req,res){
+	logger.debug('==============get allinfo===============');
+	var page=req.query.page;//页码
+	var topic=req.query.topic;//获取信息主题
+logger.debug(topic);
+	var fcn;//chaincode函数
+	var results=new Array();//返回结果集，一个json串
+	var chaincodeName = req.params.chaincodeName;
+	var channelName = req.params.channelName;
+	var peer = req.query.peer;
+	let startKey = req.query.startKey;
+	let endKey = req.query.endKey;
+	var users=new Array();
+
+ 	//根据主题判断调用函数
+	switch(topic){ 
+		//log all
+		case '1': 
+			//log own 
+		case '2': 
+			fcn=="queryLogsByUser";
+			break; 
+			//item not own
+		case '3': 
+			//item own
+		case '4': 
+			fcn=="queryItemsByItemOwner";
+			break; 
+		default: 
+		res.json(getErrorMessage('\'topic\''));
+		return;
+	} 
+
+	//获取用户列表
+	if (topic === 2 || topic === 4 ) {
+		users.push(req.username);
+	}
+	else{
+		
+	var sql="select username from fabricusers";
+	pool.query(sql,function(err,result){
+        if(err){
+          console.log('[SELECT ERROR] - ',err.message);
+          return;
+        }
+	users=getuser(result);	
+	//logger.debug(result[0].username);
+if (!users) {
+		res.json(getErrorMessage('\'No users info\''));
+		return;
+	}
+var records = new Array();
+	//获取所有记录
+	for (var i=0;i<users.length;i++) {
+		if ((topic === 3) && (users[i] == req.username)) {
+			continue;
+		};
+		var args=[users[i]];
+		query.queryChaincode(peer, channelName, chaincodeName, args, fcn, startKey, endKey, req.username, req.orgname)
+	.then(function(message) {
+logger.debug(message);
+			records=records.concat(JSON.parse(message));
+		});
+	}
+
+	//获取指定page记录，每个page10个
+	if (records.length==0) {
+		res.json(getErrorMessage('\'no record in the page\''));
+		return;
+	}
+	for (var index = page * 10-10; (index < records.length) && (index < (page * 10)); index++) {
+		var element = records[index];
+		results.push(element);
+	}
+
+	//返回所有记录
+	res.send(results);
+    	});
+return;
+	}
+
+	if (!users) {
+		res.json(getErrorMessage('\'No users info\''));
+		return;
+	}
+
+
+	var records = new Array();
+	//获取所有记录
+	for (var i=0;i<users.length;i++) {
+		if ((topic === 3) && (users[i] == req.username)) {
+			continue;
+		};
+		var args=[users[i]];
+		query.queryChaincode(peer, channelName, chaincodeName, args, fcn, startKey, endKey, req.username, req.orgname)
+	.then(function(message) {
+logger.debug(message);
+			records=records.concat(JSON.parse(message));
+		});
+	}
+
+	//获取指定page记录，每个page10个
+	if (records.length==0) {
+		res.json(getErrorMessage('\'no record in the page\''));
+		return;
+	}
+	for (var index = page * 10-10; (index < records.length) && (index < (page * 10)); index++) {
+		var element = records[index];
+		results.push(element);
+	}
+
+	//返回所有记录
+	res.send(results);
+});
+
+function getuser(result){
+	var users2=new Array();
+	for(var i=0;i<result.length;i++){
+	logger.debug(result[i].username);
+       users2.push(result[i].username);
+	}
+	return users2;
+}

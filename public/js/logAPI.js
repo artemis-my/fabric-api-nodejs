@@ -2,7 +2,8 @@
 	$(function(){
 		//sessionStorage.token="<%=token%>";
 		//sessionStorage.user="<%=user%>";
-		getAllLog("queryLogsByUser",sessionStorage.username);
+		//getAllLog("queryLogsByUser",sessionStorage.username);
+		getAll(1);
 		$("#sendbtn").click(function(){
 			$("#front").hide();
 			$("#sendlogdiv").show();
@@ -153,8 +154,46 @@ $("#loglist").empty();
 					$("#loglist").append($trs);
 				}
 			},
-error:function(data){
-console.log(data);
-}	
+			error:function(data){
+			console.log(data);
+			}	
+		});
+}
+function getAll(page){
+	$("#loglist").empty();
+	$.ajax({
+			type:"get",
+			url:"/getallinfo/channels/logchannel/chaincodes/logcc?peer=peer1&topic=1&page="+page,
+			dataType:"text",
+			beforeSend:function(xhr){
+				xhr.setRequestHeader("authorization","Bearer "+sessionStorage.token);
+				xhr.setRequestHeader("content-type","application/json");
+			},
+			success:function(data){
+				console.log(data);
+				var st=data.indexOf("[");
+				if(st!=-1){
+				var end=data.indexOf("]");
+				var newdata=data.substring(st,end+1);
+				var jsdata=JSON.parse(newdata);
+				tempsavelog=jsdata;
+				for(var i=0;i<jsdata.length;i++){
+					var record=jsdata[i].Record;
+					var $trs=$("<tr><td><input type='checkbox' class='tlog' pid='"+i+"'></td><td>"+record.name+"</td><td>"+record.logContent+"</td><td>"+record.uploadTime+"</td><td>"+record.user+"</td><td><a style='margin:0 5px;' class='look'>查看</a><a style='margin:0 5px;' class='delone'>删除</a></td></tr>");
+					$("#loglist").append($trs);
+				}
+				}else{
+					st=data.indexOf("{");
+					var end=data.indexOf("}");
+				var newdata=data.substring(st,end+1);
+				var jsdata=JSON.parse(newdata);
+					var $trs=$("<tr><td><input type='checkbox' class='tlog' pid='1'></td><td>"+jsdata.name+"</td><td>"+jsdata.logContent+"</td><td>"+jsdata.uploadTime+"</td><td>"+jsdata.user+"</td><td><a style='margin:0 5px;' class='look'>查看</a><a style='margin:0 5px;' class='delone'>删除</a></td></tr>");
+
+					$("#loglist").append($trs);
+				}
+			},
+			error:function(data){
+			console.log(data);
+			}	
 		});
 }

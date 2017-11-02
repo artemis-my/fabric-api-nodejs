@@ -19,10 +19,10 @@ var tmpBalance;
 			},
 			success:function(data){
 				//console.log(data);
-				var start=data.indexOf("[");
-				var end=data.indexOf("]");
-				var balance=data.substring(start+1,end);
-				tmpBalance=balance;
+				//var start=data.indexOf("[");
+				//var end=data.indexOf("]");
+				//var balance=data.substring(start+1,end);
+				tmpBalance=data;
 				//console.log(tmpBalance);
 			},
 				error:function(data){
