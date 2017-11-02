@@ -2,8 +2,7 @@
 	$(function(){
 		//sessionStorage.token="<%=token%>";
 		//sessionStorage.user="<%=user%>";
-		$("#user").html(sessionStorage.user);
-		getAllLog("queryLogsByUser",sessionStorage.user);
+		getAllLog("queryLogsByUser",sessionStorage.username);
 		$("#sendbtn").click(function(){
 			$("#front").hide();
 			$("#sendlogdiv").show();
@@ -28,7 +27,7 @@
 					}else{
 						alert("上传成功");
 					}
-					getAllLog("queryLogsByUser",sessionStorage.user);
+					getAllLog("queryLogsByUser",sessionStorage.username);
 					$("#front").show();
 					$("#sendlogdiv").hide();
 				}
@@ -60,7 +59,7 @@
 			}
 			$("#downtips").hide();
 			$("#downtips2").hide();
-			getAllLog("queryLogsByUser",sessionStorage.user);
+			getAllLog("queryLogsByUser",sessionStorage.username);
 		});
 		$("#canceldel").click(function(){
 			$("#downtips").hide();
@@ -94,7 +93,7 @@
 				args=useraccount;
 			}else{
 				fcn="queryLogsByUser";
-				args=sessionStorage.user;			
+				args=sessionStorage.username;			
 			}
 			getAllLog(fcn,args);
 		})

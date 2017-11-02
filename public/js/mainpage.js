@@ -1,4 +1,5 @@
 $(function(){
+	$("#user").html(sessionStorage.username);
 	$("#logapi").click(function(){
 		getleft("log");
 		getright("orderlog");

@@ -184,13 +184,7 @@ app.route('/users/login')
                 username: user.username,
                 orgName: user.orgName
                 }, app.get('secret'));
-                helper.getRegisteredUsers(user.username, user.orgName, true).then(function(response) {
-                    if (response && typeof response !== 'string') {
-                        res.render('mainpage',{token:token,user:user.username});
-                    } else {
-                        res.render('login',{loginerr:"valierr"});
-                    }
-                });
+                res.render('mainpage',{token:token,user:user});
             }else{
                 res.render('login',{loginerr:"pwderr"});
             }
@@ -233,7 +227,16 @@ app.route('/users/register')
           return;
         }
         if(result.affectedRows=='1'){
-            res.redirect('/users/login');
+	        helper.getRegisteredUsers(user.username, user.org, true).then(function(response) {
+            if (response && typeof response !== 'string') {
+            	var peers;
+            	logger.info(user.username);
+            	invoke.invokeChaincode(peers, "itemchannel", "itemcc", "initUser", [], user.username, user.org);
+               res.redirect('/users/login');
+            } else {
+               res.redirect('/users/register');
+        	}
+            });         
         }else{
             res.redirect('/users/register');
         }
