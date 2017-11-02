@@ -43,8 +43,8 @@ var queryChaincode = function(peer, channelName, chaincodeName, args, fcn, start
 			err;
 	}).then((response_payloads) => {
 		if (response_payloads) {
-			var response_list = response_payloads[0].toString('utf8');
-			if (response_list.indexOf("Key") > 0) {
+			//var response_list = response_payloads[0].toString('utf8');
+			/*if (response_list.indexOf("Key") > 0) {
 				response_list = JSON.parse(response_list);
 				var result = new Array();
 				logger.debug(response_list);
@@ -64,11 +64,11 @@ var queryChaincode = function(peer, channelName, chaincodeName, args, fcn, start
 				for (let i = startKey; i < maxKey; i++) {
 					result.push('{"Key":"' + response_list[i].Key +'", "Record":{"docType":"' + response_list[i].Record.docType +'","name":"' + response_list[i].Record.name +'","property":"' + response_list[i].Record.property +'","owner":"' + response_list[i].Record.owner +'","price":"' + response_list[i].Record.price +'"}}')
 				}
-			} else {
+			} else {*/
 				result = response_payloads[0].toString('utf8');
-			}
+			//}
 			
-			return args[0]+' now has [ ' + result +'] after the move';
+			return result;
 		} else {
 			logger.error('response_payloads is null');
 			return 'response_payloads is null';

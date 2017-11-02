@@ -131,7 +131,7 @@ $("#loglist").empty();
 				xhr.setRequestHeader("content-type","application/json");
 			},
 			success:function(data){
-				//console.log(data);
+				console.log(data);
 				var st=data.indexOf("[");
 				if(st!=-1){
 				var end=data.indexOf("]");
