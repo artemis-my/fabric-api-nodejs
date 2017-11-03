@@ -163,7 +163,7 @@ function getAll(page){
 	$("#loglist").empty();
 	$.ajax({
 			type:"get",
-			url:"/getallinfo/channels/logchannel/chaincodes/logcc?peer=peer1&topic=1&page="+page,
+			url:"/getallinfo/channels/logchannel/chaincodes/logcc?peer=peer1&topic=2&page="+page,
 			dataType:"text",
 			beforeSend:function(xhr){
 				xhr.setRequestHeader("authorization","Bearer "+sessionStorage.token);

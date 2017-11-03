@@ -574,7 +574,6 @@ app.get('/getallinfo/channels/:channelName/chaincodes/:chaincodeName',function(r
 	logger.debug('==============get allinfo===============');
 	var page=req.query.page;//页码
 	var topic=req.query.topic;//获取信息主题
-logger.debug(topic);
 	var fcn;//chaincode函数
 	var results=new Array();//返回结果集，一个json串
 	var chaincodeName = req.params.chaincodeName;
@@ -590,22 +589,41 @@ logger.debug(topic);
 		case '1': 
 			//log own 
 		case '2': 
-			fcn=="queryLogsByUser";
+			fcn="queryLogsByUser";
 			break; 
 			//item not own
 		case '3': 
 			//item own
 		case '4': 
-			fcn=="queryItemsByItemOwner";
+			fcn="queryItemsByItemOwner";
 			break; 
 		default: 
 		res.json(getErrorMessage('\'topic\''));
 		return;
 	} 
-
+	var records = new Array();
 	//获取用户列表
-	if (topic === 2 || topic === 4 ) {
+	if (topic == 2 || topic == 4 ) {
 		users.push(req.username);
+		if (!users) {
+		res.json(getErrorMessage('\'No users info\''));
+		return;
+		}
+		query.queryChaincode(peer, channelName, chaincodeName, [users[0]], fcn, startKey, endKey, req.username, req.orgname).then(function(message) {
+		records =records.concat(JSON.parse(message));
+		if (records.length==0) {
+			res.json(getErrorMessage('\'no record in the page\''));
+			return;
+		}
+		var results=new Array();
+		for (var index = page * 10-10; (index < records.length) && (index < (page * 10)); index++) {
+			var element = records[index];
+			results.push(element);
+		}
+		res.send(results);
+		return;
+		});
+		
 	}
 	else{
 		
@@ -615,81 +633,37 @@ logger.debug(topic);
           console.log('[SELECT ERROR] - ',err.message);
           return;
         }
-	users=getuser(result);	
+	for(var j=0;j<result.length;j++){
+		users.push(result[j].username);
+	}	
 	//logger.debug(result[0].username);
-if (!users) {
-		res.json(getErrorMessage('\'No users info\''));
-		return;
-	}
-var records = new Array();
-	//获取所有记录
-	for (var i=0;i<users.length;i++) {
-		if ((topic === 3) && (users[i] == req.username)) {
-			continue;
-		};
-		var args=[users[i]];
-		query.queryChaincode(peer, channelName, chaincodeName, args, fcn, startKey, endKey, req.username, req.orgname)
-	.then(function(message) {
-logger.debug(message);
-			records=records.concat(JSON.parse(message));
-		});
-	}
-
-	//获取指定page记录，每个page10个
-	if (records.length==0) {
-		res.json(getErrorMessage('\'no record in the page\''));
-		return;
-	}
-	for (var index = page * 10-10; (index < records.length) && (index < (page * 10)); index++) {
-		var element = records[index];
-		results.push(element);
-	}
-
-	//返回所有记录
-	res.send(results);
-    	});
-return;
-	}
-
 	if (!users) {
 		res.json(getErrorMessage('\'No users info\''));
 		return;
 	}
-
-
-	var records = new Array();
-	//获取所有记录
-	for (var i=0;i<users.length;i++) {
-		if ((topic === 3) && (users[i] == req.username)) {
-			continue;
-		};
-		var args=[users[i]];
-		query.queryChaincode(peer, channelName, chaincodeName, args, fcn, startKey, endKey, req.username, req.orgname)
-	.then(function(message) {
-logger.debug(message);
-			records=records.concat(JSON.parse(message));
-		});
-	}
-
-	//获取指定page记录，每个page10个
-	if (records.length==0) {
-		res.json(getErrorMessage('\'no record in the page\''));
+		var promisearray=[];
+		for(var i=0;i<users.length;i++){
+			logger.debug(users[i]);
+			query.queryChaincode(peer, channelName, chaincodeName, [users[i]], fcn, startKey, endKey, req.username, req.orgname).then(function(message){return message;});
+			promisearray.push(query.queryChaincode(peer, channelName, chaincodeName, users[i], fcn, startKey, endKey, req.username, req.orgname).then(function(data){logger.info(data);return data;}));
+		} 
+		Promise.all(promisearray).then(function(data){
+			logger.info(data);
+		records=data;
+		if (records.length==0) {
+			res.json(getErrorMessage('\'no record in the page\''));
+			return;
+		}
+		var results=new Array();
+		for (var index = page * 10-10; (index < records.length) && (index < (page * 10)); index++) {
+			var element = records[index];
+			results.push(element);
+		}
+		res.send(results);
 		return;
+		});
+	});
 	}
-	for (var index = page * 10-10; (index < records.length) && (index < (page * 10)); index++) {
-		var element = records[index];
-		results.push(element);
-	}
-
-	//返回所有记录
-	res.send(results);
+	
 });
 
-function getuser(result){
-	var users2=new Array();
-	for(var i=0;i<result.length;i++){
-	logger.debug(result[i].username);
-       users2.push(result[i].username);
-	}
-	return users2;
-}

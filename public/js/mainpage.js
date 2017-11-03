@@ -27,6 +27,10 @@ $(function(){
 	$("#leftmenu").on('click','#accountinfo',function(){
 		getright("accountinfo");
 	});
+	$("#logout").click(function(){
+		sessionStorage.clear();
+		window.location.href="/users/login";
+	});
 
 });
 function getleft(topic){
