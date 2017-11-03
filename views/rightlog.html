@@ -38,35 +38,6 @@
 		</table></div><div class="fixed-table-footer" style="display: none;"><table><tbody><tr></tr></tbody></table></div><div class="fixed-table-pagination" style="display: none;"></div></div></div><div class="clearfix"></div>
       </div>
       <ul class="pagination"  id="page"></ul>
-<script type="text/javascript">
-        $(function(){
-            var options={
-                bootstrapMajorVersion:3,    //版本
-                currentPage:1,    //当前页数
-                numberOfPages:5,    //最多显示Page页
-                totalPages:10,    //所有数据可以显示的页数
-    itemTexts: function (type, page, current) {
-        switch (type) {
-            case "first":
-                return "首页";
-            case "prev":
-                return "上一页";
-            case "next":
-                return "下一页";
-            case "last":
-                return "末页";
-            case "page":
-                return page;
-             }
-        },
-                onPageClicked:function(e,originalEvent,type,page){
-
-
-                }
-            }
-            $("#page").bootstrapPaginator(options);
-        })
-    </script>
   </div>
       <div id="sendlogdiv" style="display: none;">
       	<div style="border-bottom: solid 1px #dddddd;margin: 30px;padding: 10px;font-size: 16px">
