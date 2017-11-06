@@ -9,7 +9,7 @@
 		</div>
 	</div>
 	<div style="position: relative;top:40px;width:80%;left:5%">
-        <div class="bootstrap-table"><div class="fixed-table-toolbar"></div><div class="fixed-table-container" style="padding-bottom: 0px;"><div class="fixed-table-header" style="display: none;"><table></table></div><div class="fixed-table-body"><div class="fixed-table-loading" style="top: 38px;">正在努力地加载数据中，请稍候……</div><table data-toggle="table" class="table-striped table table-hover" style="width:1000px;table-layout:fixed;">
+        <div class="bootstrap-table"><div class="fixed-table-toolbar"></div><div class="fixed-table-container" style="padding-bottom: 0px;"><div class="fixed-table-header" style="display: none;"><table></table></div><div class="fixed-table-body"><div class="fixed-table-loading" style="top: 38px;">正在努力地加载数据中，请稍候……</div><table data-toggle="table" class="table-striped table table-hover" style="width:100%;table-layout:fixed;">
         	<colgroup>
         		<col style="width:10%">
 				<col style="width:15%">
@@ -31,35 +31,8 @@
 		    </tbody>
 		</table></div><div class="fixed-table-footer" style="display: none;"><table><tbody><tr></tr></tbody></table></div><div class="fixed-table-pagination" style="display: none;"></div></div></div><div class="clearfix"></div>
       </div>
+      <div style="height:20px;width=100px;position:relative;top:50px"></div>
       <ul class="pagination"  id="page"></ul>
-<script type="text/javascript">
-        $(function(){
-            var options={
-                bootstrapMajorVersion:3,    //版本
-                currentPage:1,    //当前页数
-                numberOfPages:5,    //最多显示Page页
-                totalPages:10,    //所有数据可以显示的页数
-		itemTexts: function (type, page, current) {
-		    switch (type) {
-		        case "first":
-		            return "首页";
-		        case "prev":
-		            return "上一页";
-		        case "next":
-		            return "下一页";
-		        case "last":
-		            return "末页";
-		        case "page":
-		            return page;
-           	 }
-        },
-                onPageClicked:function(e,originalEvent,type,page){
-
-
-                }
-            }
-            $("#page").bootstrapPaginator(options);
-        })
-    </script>
   </div>
+  <script type="text/javascript" src="/js/producttransaction.js"></script>
 

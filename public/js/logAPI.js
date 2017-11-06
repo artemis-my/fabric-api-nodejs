@@ -1,34 +1,33 @@
 	var tempsavelog;
+	var options={
+                bootstrapMajorVersion:3,    //版本
+                currentPage:1,    //当前页数
+                numberOfPages:5,    //最多显示Page页
+                totalPages:1,    //所有数据可以显示的页数
+				itemTexts: function (type, page, current) {
+				    switch (type) {
+				        case "first":
+				            return "首页";
+				        case "prev":
+				            return "上一页";
+				        case "next":
+				            return "下一页";
+				        case "last":
+				            return "末页";
+				        case "page":
+				            return page;
+		           	 }
+	       		 },
+                onPageClicked:function(e,originalEvent,type,page){
+					getAll(page,1);
+                }
+            }
 	$(function(){
 		//sessionStorage.token="<%=token%>";
 		//sessionStorage.user="<%=user%>";
 		//getAllLog("queryLogsByUser",sessionStorage.username);
-var options={
-                bootstrapMajorVersion:3,    //版本
-                currentPage:1,    //当前页数
-                numberOfPages:5,    //最多显示Page页
-                totalPages:10,    //所有数据可以显示的页数
-		itemTexts: function (type, page, current) {
-		    switch (type) {
-		        case "first":
-		            return "首页";
-		        case "prev":
-		            return "上一页";
-		        case "next":
-		            return "下一页";
-		        case "last":
-		            return "末页";
-		        case "page":
-		            return page;
-           	 }
-        },
-                onPageClicked:function(e,originalEvent,type,page){
-				getAll(page);
-
-                }
-            }
             $("#page").bootstrapPaginator(options);
-		getAll(1);
+		getAll(1,1);
 		$("#sendbtn").click(function(){
 			$("#front").hide();
 			$("#sendlogdiv").show();
@@ -53,7 +52,7 @@ var options={
 					}else{
 						alert("上传成功");
 					}
-					getAllLog("queryLogsByUser",sessionStorage.username);
+					getAll(1,1);
 					$("#front").show();
 					$("#sendlogdiv").hide();
 				}
@@ -85,7 +84,6 @@ var options={
 			}
 			$("#downtips").hide();
 			$("#downtips2").hide();
-			getAllLog("queryLogsByUser",sessionStorage.username);
 		});
 		$("#canceldel").click(function(){
 			$("#downtips").hide();
@@ -118,8 +116,8 @@ var options={
 				fcn="queryLogsByUser";
 				args=useraccount;
 			}else{
-				fcn="queryLogsByUser";
-				args=sessionStorage.username;			
+				getAll(1,2);
+				return;			
 			}
 			getAllLog(fcn,args);
 		})
@@ -139,8 +137,9 @@ var options={
 					if(data.indexOf("Fail")!=-1||data.indexOf("Error")!=-1){
 						alert("删除失败");
 					}else{
-						alert("删除成功");
+						
 					}
+					getAll(1,1);
 					//getAllLog();
 					//$("#downtips").hide();
 				}
@@ -175,7 +174,6 @@ $("#loglist").empty();
 				var newdata=data.substring(st,end+1);
 				var jsdata=JSON.parse(newdata);
 					var $trs=$("<tr><td><input type='checkbox' class='tlog' pid='1'></td><td>"+jsdata.name+"</td><td>"+jsdata.logContent+"</td><td>"+jsdata.uploadTime+"</td><td>"+jsdata.user+"</td><td><a style='margin:0 5px;' class='look'>查看</a><a style='margin:0 5px;' class='delone'>删除</a></td></tr>");
-
 					$("#loglist").append($trs);
 				}
 			},
@@ -184,11 +182,11 @@ $("#loglist").empty();
 			}	
 		});
 }
-function getAll(page){
+function getAll(page,topic){
 	$("#loglist").empty();
 	$.ajax({
 			type:"get",
-			url:"/getallinfo/channels/logchannel/chaincodes/logcc?peer=peer1&topic=2&page="+page,
+			url:"/getallinfo/channels/logchannel/chaincodes/logcc?peer=peer1&topic="+topic+"&page="+page,
 			dataType:"text",
 			beforeSend:function(xhr){
 				xhr.setRequestHeader("authorization","Bearer "+sessionStorage.token);
@@ -196,26 +194,23 @@ function getAll(page){
 			},
 			success:function(data){
 				console.log(data);
-				var st=data.indexOf("[");
-				if(st!=-1){
-				var end=data.indexOf("]");
-				var newdata=data.substring(st,end+1);
-				var jsdata=JSON.parse(newdata);
-				tempsavelog=jsdata;
-				for(var i=0;i<jsdata.length;i++){
-					var record=jsdata[i].Record;
-					var $trs=$("<tr><td><input type='checkbox' class='tlog' pid='"+i+"'></td><td>"+record.name+"</td><td>"+record.logContent+"</td><td>"+record.uploadTime+"</td><td>"+record.user+"</td><td><a style='margin:0 5px;' class='look'>查看</a><a style='margin:0 5px;' class='delone'>删除</a></td></tr>");
+				var st=data.indexOf("no record in the page");
+				if(st==-1){
+					var jsdata=JSON.parse(data);
+					tempsavelog=jsdata;
+					var lh=jsdata.length
+					for(var i=0;i<lh-1;i++){
+						var record=jsdata[i].Record;
+						var $trs=$("<tr><td><input type='checkbox' class='tlog' pid='"+i+"'></td><td>"+record.name+"</td><td>"+record.logContent+"</td><td>"+record.uploadTime+"</td><td>"+record.user+"</td><td><a style='margin:0 5px;' class='look'>查看</a><a style='margin:0 5px;' class='delone'>删除</a></td></tr>");
+						$("#loglist").append($trs);
+					}
+					options.totalPages=jsdata[lh-1].totalpages;	
+				}else{	
+					var $trs=$("<tr><td colspan='3'>no record in the page</td></tr>");
 					$("#loglist").append($trs);
+					options.totalPages=1;
 				}
-				}else{
-					st=data.indexOf("{");
-					var end=data.indexOf("}");
-				var newdata=data.substring(st,end+1);
-				var jsdata=JSON.parse(newdata);
-					var $trs=$("<tr><td><input type='checkbox' class='tlog' pid='1'></td><td>"+jsdata.name+"</td><td>"+jsdata.logContent+"</td><td>"+jsdata.uploadTime+"</td><td>"+jsdata.user+"</td><td><a style='margin:0 5px;' class='look'>查看</a><a style='margin:0 5px;' class='delone'>删除</a></td></tr>");
-
-					$("#loglist").append($trs);
-				}
+				$("#page").bootstrapPaginator(options);
 			},
 			error:function(data){
 			console.log(data);

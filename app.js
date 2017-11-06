@@ -587,13 +587,15 @@ app.get('/getallinfo/channels/:channelName/chaincodes/:chaincodeName',function(r
 	switch(topic){ 
 		//log all
 		case '1': 
-			//log own 
+			fcn="queryLogsByUser";
+			break; 
 		case '2': 
 			fcn="queryLogsByUser";
 			break; 
 			//item not own
 		case '3': 
-			//item own
+			fcn="queryItemsByItemOwner";
+			break;
 		case '4': 
 			fcn="queryItemsByItemOwner";
 			break; 
@@ -609,7 +611,13 @@ app.get('/getallinfo/channels/:channelName/chaincodes/:chaincodeName',function(r
 		res.json(getErrorMessage('\'No users info\''));
 		return;
 		}
-		query.queryChaincode(peer, channelName, chaincodeName, [users[0]], fcn, startKey, endKey, req.username, req.orgname).then(function(message) {
+		var args=[];
+		if(topic==4){
+			args=['',users[0]];
+		}else{
+			args=[users[0]];
+		}
+		query.queryChaincode(peer, channelName, chaincodeName,args, fcn, startKey, endKey, req.username, req.orgname).then(function(message) {
 		records =records.concat(JSON.parse(message));
 		if (records.length==0) {
 			res.json(getErrorMessage('\'no record in the page\''));
@@ -620,6 +628,8 @@ app.get('/getallinfo/channels/:channelName/chaincodes/:chaincodeName',function(r
 			var element = records[index];
 			results.push(element);
 		}
+		var totalpage=Math.ceil(records.length/10.0);
+		results.push({"totalpages":totalpage});
 		res.send(results);
 		return;
 		});
@@ -634,6 +644,9 @@ app.get('/getallinfo/channels/:channelName/chaincodes/:chaincodeName',function(r
           return;
         }
 	for(var j=0;j<result.length;j++){
+		if(topic==3&&result[j].username==req.username){
+			continue;
+		}
 		users.push(result[j].username);
 	}	
 	//logger.debug(result[0].username);
@@ -643,13 +656,20 @@ app.get('/getallinfo/channels/:channelName/chaincodes/:chaincodeName',function(r
 	}
 		var promisearray=[];
 		for(var i=0;i<users.length;i++){
+			var args=[];
+			if(topic==1){
+				args=[users[i]];
+			}else{
+				args=['',users[i]];
+			}
 			logger.debug(users[i]);
-			query.queryChaincode(peer, channelName, chaincodeName, [users[i]], fcn, startKey, endKey, req.username, req.orgname).then(function(message){return message;});
-			promisearray.push(query.queryChaincode(peer, channelName, chaincodeName, users[i], fcn, startKey, endKey, req.username, req.orgname).then(function(data){logger.info(data);return data;}));
+			promisearray.push(query.queryChaincode(peer, channelName, chaincodeName, args, fcn, startKey, endKey, req.username, req.orgname).then(function(data){logger.info(data);return data;}));
 		} 
 		Promise.all(promisearray).then(function(data){
 			logger.info(data);
-		records=data;
+			for(var i=0;i<data.length;i++){
+				records=records.concat(JSON.parse(data[i]));
+			}
 		if (records.length==0) {
 			res.json(getErrorMessage('\'no record in the page\''));
 			return;
@@ -659,11 +679,12 @@ app.get('/getallinfo/channels/:channelName/chaincodes/:chaincodeName',function(r
 			var element = records[index];
 			results.push(element);
 		}
+		var totalpage=Math.ceil(records.length/10.0);
+		results.push({"totalpages":totalpage});
 		res.send(results);
 		return;
 		});
 	});
-	}
-	
+	}	
 });
 

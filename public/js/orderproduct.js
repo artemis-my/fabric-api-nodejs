@@ -1,11 +1,37 @@
+	var options={
+                bootstrapMajorVersion:3,    //版本
+                currentPage:1,    //当前页数
+                numberOfPages:5,    //最多显示Page页
+                totalPages:1,    //所有数据可以显示的页数
+				itemTexts: function (type, page, current) {
+				    switch (type) {
+				        case "first":
+				            return "首页";
+				        case "prev":
+				            return "上一页";
+				        case "next":
+				            return "下一页";
+				        case "last":
+				            return "末页";
+				        case "page":
+				            return page;
+		           	 }
+	       		 },
+                onPageClicked:function(e,originalEvent,type,page){
+					getAll(page,1);
+                }
+            }
 $(function(){
+    $("#page").bootstrapPaginator(options);
+	getAll(1,4);
 	$("#getitem1").click(function(){
 		var name=$("#itemname").val();
 		if(name!=null&&name!=""){
 			$("#itemlist").empty();
 			getOneItem(name);
+		}else{
+			getAll(1,4);
 		}
-
 	});
 	$("#upitem").click(function(){
 		$("#front").hide();
@@ -29,7 +55,7 @@ $(function(){
 		$("#downtips2").show();
 	});
 	$("#downitem2").click(function(){
-		var titems=$(".titems");
+		var titems=$(".titem");
 			for(var i=0;i<titems.length;i++){
 				if($(titems[i]).is(":checked")){
 					var name=$(titems[i]).parent().parent().children("td").eq(1).html();
@@ -38,7 +64,6 @@ $(function(){
 					delOneItem(args);
 				}
 			}
-			alert("删除成功");
 			$("#downtips").hide();
 			$("#downtips2").hide();
 			//getAllItem("queryLogsByUser",sessionStorage.username);
@@ -47,11 +72,16 @@ $(function(){
 		$("#downtips").hide();
 		$("#downtips2").hide();
 	});
+	$("#itemlist").on("click",".downitem3",function(){
+		$(this).parent().parent().children(":first").children().attr("checked",true);
+		$("#downtips").show();
+		$("#downtips2").show();
+		});
 })
 function getOneItem(name){
 	$.ajax({
 		type:"get",
-		url:"/channels/itemchannel/chaincodes/itemcc?peer=peer1&fcn=queryItemsByItemOwner&args=%5B%22"+name+"%22%2c%22%22%2c%22"+sessionStorage.username+"%22%5D",
+		url:"/channels/itemchannel/chaincodes/itemcc?peer=peer1&fcn=queryItemsByItemOwner&args=%5B%22"+name+"%22%2c%22"+sessionStorage.username+"%22%5D",
 		dataType:"text",
 		beforeSend:function(xhr){
 				xhr.setRequestHeader("authorization","Bearer "+sessionStorage.token);
@@ -59,6 +89,13 @@ function getOneItem(name){
 			},
 		success:function(data){
 			console.log(data);
+				var jsdata=JSON.parse(data);
+				tempsavelog=jsdata;
+				for(var i=0;i<jsdata.length;i++){
+					var record=jsdata[i].Record;
+					var $trs=$("<tr><td><input type='checkbox' class='titem' pid='"+i+"'></td><td>"+record.name+"</td><td>"+record.property+"</td><td>"+record.price+"</td><td><a style='margin:0 5px;' class='downitem3'>下链</a></td></tr>");
+					$("#itemlist").append($trs);
+				}
 		},
 		error:function(data){
 			console.log(data);
@@ -81,6 +118,7 @@ function upitem(args){
 				}else{
 					alert("上传成功");
 				}
+				getAll(1,4);
 		},
 		error:function(data){
 
@@ -99,10 +137,15 @@ function delOneItem(args){
 				xhr.setRequestHeader("content-type","application/json");
 			},
 		success:function(data){
-
+			if(data.indexOf("Fail")!=-1||data.indexOf("Error")!=-1){
+						alert("删除失败");
+					}else{
+						
+					}
+					getAll(1,4);
 		},
 		error:function(data){
-
+			console.log(data);
 		}
 	})
 }
@@ -120,4 +163,38 @@ function getOwnerItem(){
 		},
 
 	})
+}
+function getAll(page,topic){
+	$("#itemlist").empty();
+	$.ajax({
+			type:"get",
+			url:"/getallinfo/channels/itemchannel/chaincodes/itemcc?peer=peer1&topic="+topic+"&page="+page,
+			dataType:"text",
+			beforeSend:function(xhr){
+				xhr.setRequestHeader("authorization","Bearer "+sessionStorage.token);
+				xhr.setRequestHeader("content-type","application/json");
+			},
+			success:function(data){
+				console.log(data);
+				var st=data.indexOf("no record in the page");
+				if(st==-1){
+					var jsdata=JSON.parse(data);
+					tempsavelog=jsdata;
+					for(var i=0;i<jsdata.length-1;i++){
+						var record=jsdata[i].Record;
+						var $trs=$("<tr><td><input type='checkbox' class='titem' pid='"+i+"'></td><td>"+record.name+"</td><td>"+record.property+"</td><td>"+record.price+"</td><td><a style='margin:0 5px;' class='downitem3'>下链</a></td></tr>");
+						$("#itemlist").append($trs);
+					}
+					options.totalPages=jsdata[jsdata.length-1].totalpages;
+				}else{	
+					var $trs=$("<tr><td colspan='3'>no record in the page</td></tr>");
+					$("#itemlist").append($trs);
+					options.totalPages=1;
+				}
+				$("#page").bootstrapPaginator(options);
+			},
+			error:function(data){
+			console.log(data);
+			}	
+		});
 }
