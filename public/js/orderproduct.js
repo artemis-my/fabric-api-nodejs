@@ -198,3 +198,7 @@ function getAll(page,topic){
 			}	
 		});
 }
+function clearNoNum(obj){
+   obj.value = obj.value.replace(/[^\d]/g,"");  //清除“数字”以外的字符
+   obj.value = obj.value.replace(/^0/g,"");  //验证第一个字符不是0
+}

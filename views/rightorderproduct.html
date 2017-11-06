@@ -43,7 +43,7 @@
       	<div style="margin: 30px;">
       		<div style="margin: 30px;">商品名称<input type="text" id="itemname2" placeholder="请输入..." ></div>
       		<div style="margin: 30px;">商品属性<input type="text" name="" id="itemproperty2" placeholder="请输入..."></div>
-      		<div style="margin: 30px;">商品价格<input type="text" name="" id="itemprice2" placeholder="0.00"></div>
+      		<div style="margin: 30px;">商品价格<input type="text" name="" id="itemprice2" placeholder="请输入整数" onkeypress="clearNoNum(this)" oninput="clearNoNum(this)" onpropertychange="clearNoNum(this)" sonblur="clearNoNum(this)"></div>
       		<input type="button" class="btn btnb" id="upitem2" value="上链">
       		<input type="button" class="btn btn2" id="cancelup" value="取消">
       	</div>
