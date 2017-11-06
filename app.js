@@ -172,7 +172,7 @@ app.route('/users/login')
           return;
         }
         if(result==null||result==''){
-            res.render('login',{loginerr:"nameerr"});
+            res.render('login',{loginerr:'nameerr'});
         }else{
             if(result[0].userpassword==password){
                 var user={
@@ -187,7 +187,7 @@ app.route('/users/login')
                 }, app.get('secret'));
                 res.render('mainpage',{token:token,user:user});
             }else{
-                res.render('login',{loginerr:"pwderr"});
+                res.render('login',{loginerr:'pwderr'});
             }
         }
     });
