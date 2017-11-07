@@ -8,7 +8,14 @@ $(function(){
 		getleft("product");
 		getright("orderproduct");
 	}).hover(over,out);
-	$("#leftmenu").on('click','#explorer',function(){
+	$("#leftmenu").on('click','#explorer1',function(){
+		$("#rightbody").empty();
+		//$("#rightbody").html("<iframe width=800px height=800px src=></iframe>")
+		$explo=$("<iframe width=100% height=100%></iframe>");
+		$explo.attr("src","//172.20.29.20:8080/");
+		$("#rightbody").append($explo);
+	});
+	$("#leftmenu").on('click','#explorer2',function(){
 		$("#rightbody").empty();
 		//$("#rightbody").html("<iframe width=800px height=800px src=></iframe>")
 		$explo=$("<iframe width=100% height=100%></iframe>");
