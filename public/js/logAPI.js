@@ -65,6 +65,9 @@
 							getAll(1,1);
 							$("#front").show();
 							$("#sendlogdiv").hide();
+							$("#logfile").val("");
+							$("#logname2").val("");
+							$("#log2").val("");
 						}
 					});
 				}else{
@@ -78,6 +81,9 @@
 		$("#cancel").click(function(){
 			$("#front").show();
 			$("#sendlogdiv").hide();
+			$("#logfile").val("");
+			$("#logname2").val("");
+			$("#log2").val("");
 		});
 		$("#dellog").click(function(){
 			$("#downtips").show();
