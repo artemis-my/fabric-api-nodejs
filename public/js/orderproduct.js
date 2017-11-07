@@ -43,8 +43,6 @@ $(function(){
 		var iprice=$("#itemprice2").val();
 		var args=[iname,iproperty,iprice];
 		upitem(args);
-		$("#front").show();
-		$("#upitemdiv").hide();
 	});
 	$("#cancelup").click(function(){
 		$("#front").show();
@@ -119,9 +117,13 @@ function upitem(args){
 					alert("上传成功");
 				}
 				getAll(1,4);
+				$("#front").show();
+				$("#upitemdiv").hide();
 		},
 		error:function(data){
-
+			alert("上传失败");
+			$("#front").show();
+			$("#upitemdiv").hide();
 		}
 
 	})
