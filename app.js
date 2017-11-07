@@ -29,6 +29,7 @@ var expressJWT = require('express-jwt');
 var jwt = require('jsonwebtoken');
 var bearerToken = require('express-bearer-token');
 var cors = require('cors');
+var upload=require('multer');
 var unless = require('express-unless');
 var mysql=require('mysql');
 var pool = mysql.createPool({     
@@ -72,7 +73,7 @@ app.set('secret', 'thisismysecret');
 app.use(expressJWT({
 	secret: 'thisismysecret'
 }).unless({
-	path: ['/users/login','/users/register','/users/regvali',"/","/users","/favicon.ico"]
+	path: ['/users/login','/users/register','/users/regvali',"/","/users","/favicon.ico","/users/forgetpwd"]
 }));
 app.use(bearerToken());
 app.use(function(req, res, next) {
@@ -243,6 +244,60 @@ app.route('/users/register')
         }
      });
  });
+ 
+ //忘记密码
+ app.route('/users/forgetpwd')
+ .get(function(req,res){
+ 	if(req.query.name){
+ 		var name=req.query.name;
+ 		var phone=req.query.phone;
+ 		var sql1="select phonenumber from fabricusers where username=?";
+ 		pool.query(sql1,[name],function(err,result){
+	 		if(err){
+	          console.log('[SELECT ERROR] - ',err.message);
+	          return;
+	        }
+	        if(result[0].phonenumber==phone){
+	        	res.json({err:""});
+	        }else{
+	        	res.json({err:"账号与手机号不匹配"});
+	        }
+ 		});		
+ 	}else{
+ 		res.render('forgetpwd',{title:"忘记密码"});
+ 	}
+ })
+ .post(function(req,res){
+ 	var name=req.body.username;
+ 	var phone=req.body.phonenumber;
+ 	var pwd=req.body.password;
+ 	var sql1="select phonenumber from fabricusers where username=?";
+ 		pool.query(sql1,[name],function(err,result){
+	 		if(err){
+	          console.log('[SELECT ERROR] - ',err.message);
+	          return;
+	        }
+	        if(result[0].phonenumber==phone){
+	        	var sql2="update fabricusers set userpassword=? where username=?";
+	        	pool.query(sql2,[pwd,name],function(err1,result1){
+	        		if(err1){
+			          console.log('[SELECT ERROR] - ',err.message);
+			          return;
+	        		}
+	        		if(result1.affectedRows=='1'){
+	        			res.writeHead(200, {'Content-type' : 'text/html;charset=utf-8'});
+ 						res.write('<script>alert("密码修改成功");window.location.href="/users/login"</script>');
+ 						res.end();
+	        		}else{
+	        			res.writeHead(200, {'Content-type' : 'text/html;charset=utf-8'});
+ 						res.write('<script>alert("密码修改失败");window.location.href="/users/forgetpwd"</script>');
+ 						res.end();
+	        		}
+	        	});
+	        }
+ 		});		
+ });
+ 
  
 /* app.get('/logout', function(req, res) {
      req.session.user = null;
@@ -427,6 +482,12 @@ app.post('/channels/:channelName/chaincodes/:chaincodeName', function(req, res) 
 		res.send(message);
 	});
 });
+//post log file and uplog
+app.post('/uplogfile',function(req,res){
+
+
+});
+
 // Query on chaincode on target peers
 app.get('/channels/:channelName/chaincodes/:chaincodeName', function(req, res) {
 	logger.debug('==================== QUERY BY CHAINCODE ==================');
