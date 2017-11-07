@@ -32,31 +32,48 @@
 			$("#front").hide();
 			$("#sendlogdiv").show();
 		});
+		$("#logfilediv").click(function(){
+			$("#logfile").click();
+		});
+		$("#logfile").change(function(){
+			$("#logname2").val($(this).val());
+		});
 		$("#sendlog").click(function(){
+			var filedata=new FormData();
+			var file=$("#logfile");
 			var logname=$("#logname2").val();
 			var logg=$("#log2").val();
-			var arg=[logname,logg];
-			$.ajax({
-				type:"post",
-				url:"/channels/logchannel/chaincodes/logcc",
-				data:JSON.stringify({"args":arg,"fcn":"uploadLog"}),
-				dataType:"text",
-				beforeSend:function(xhr){
-					xhr.setRequestHeader("authorization","Bearer "+sessionStorage.token);
-					xhr.setRequestHeader("content-type","application/json");
-				},
-				success:function(data){
-					console.log(data);
-					if(data.indexOf("Fail")!=-1||data.indexOf("Error")!=-1){
-						alert("上传失败");
-					}else{
-						alert("上传成功");
-					}
-					getAll(1,1);
-					$("#front").show();
-					$("#sendlogdiv").hide();
+			if(file.val()==""){
+				if(logname!=""&&logg!=""){
+					var arg=[logname,logg];
+					$.ajax({
+						type:"post",
+						url:"/channels/logchannel/chaincodes/logcc",
+						data:JSON.stringify({"args":arg,"fcn":"uploadLog"}),
+						dataType:"text",
+						beforeSend:function(xhr){
+							xhr.setRequestHeader("authorization","Bearer "+sessionStorage.token);
+							xhr.setRequestHeader("content-type","application/json");
+						},
+						success:function(data){
+							console.log(data);
+							if(data.indexOf("Fail")!=-1||data.indexOf("Error")!=-1){
+								alert("上传失败");
+							}else{
+								alert("上传成功");
+							}
+							getAll(1,1);
+							$("#front").show();
+							$("#sendlogdiv").hide();
+						}
+					});
+				}else{
+					alert("请填写完整log信息后上传");
 				}
-			});
+			}else{
+				filedata.append("file",file.files[0]);
+				uplogfile(filedata);
+			}
 		});
 		$("#cancel").click(function(){
 			$("#front").show();
@@ -226,4 +243,29 @@ function getAll(page,topic){
 			console.log(data);
 			}	
 		});
+}
+function uplogfile(file){
+	$.ajax({
+			type:"post",
+			url:"/uplogfile",
+			data:file,
+			cache: false,
+    		contentType: false,
+    		processData: false,
+			dataType:"text",
+			beforeSend:function(xhr){
+				xhr.setRequestHeader("authorization","Bearer "+sessionStorage.token);
+			},
+			success:function(data){
+				console.log(data);
+				if(data.indexOf("Fail")!=-1||data.indexOf("Error")!=-1){
+					alert("上传失败");
+				}else{
+					alert("上传成功");
+				}
+				getAll(1,1);
+				$("#front").show();
+				$("#sendlogdiv").hide();
+			}
+	});
 }
