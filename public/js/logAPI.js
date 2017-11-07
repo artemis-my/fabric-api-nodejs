@@ -79,7 +79,10 @@
 			for(var i=0;i<tlogs.length;i++){
 				if($(tlogs[i]).is(":checked")){
 					var name=$(tlogs[i]).parent().parent().children("td").eq(1).html();
-					delOneLog(name);
+					var owner=$(tlogs[i]).parent().parent().children("td").eq(4).html();
+					if(owner==sessionStorage.username){
+						delOneLog(name);
+					}
 				}
 			}
 			$("#downtips").hide();
