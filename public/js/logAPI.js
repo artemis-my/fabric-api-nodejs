@@ -68,9 +68,9 @@
 		});
 		$("#seltotal").click(function(){
 			if($(this).is(':checked')){
-				$(".tlog").attr("checked",true);
+				$(".tlog").prop("checked",true);
 			}else{
-				$(".tlog").attr("checked",false);
+				$(".tlog").prop("checked",false);
 			}
 
 		});
@@ -159,7 +159,7 @@ $("#loglist").empty();
 				xhr.setRequestHeader("content-type","application/json");
 			},
 			success:function(data){
-				console.log(data);
+				//console.log(data);
 				var st=data.indexOf("[");
 				if(data.indexOf("no record in the page")!=-1||data.indexOf("not exist")!=-1){
 					var $trs=$("<tr><td colspan='3'>no record in the page</td></tr>");

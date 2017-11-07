@@ -44,6 +44,14 @@ $(function(){
 		var args=[iname,iproperty,iprice];
 		upitem(args);
 	});
+	$("#seltotal").click(function(){
+		if($(this).is(':checked')){
+			$(".titem").prop("checked",true);
+		}else{
+			$(".titem").prop("checked",false);
+		}
+
+	});
 	$("#cancelup").click(function(){
 		$("#front").show();
 		$("#upitemdiv").hide();
@@ -177,7 +185,7 @@ function getAll(page,topic){
 				xhr.setRequestHeader("content-type","application/json");
 			},
 			success:function(data){
-				console.log(data);
+				//console.log(data);
 				var st=data.indexOf("no record in the page");
 				if(st==-1){
 					var jsdata=JSON.parse(data);
