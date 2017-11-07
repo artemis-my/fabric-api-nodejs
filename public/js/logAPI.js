@@ -158,6 +158,13 @@ $("#loglist").empty();
 			success:function(data){
 				console.log(data);
 				var st=data.indexOf("[");
+				if(data.indexOf("no record in the page")!=-1||data.indexOf("not exist")!=-1){
+					var $trs=$("<tr><td colspan='3'>no record in the page</td></tr>");
+					$("#loglist").append($trs);
+					options.totalPages=1;
+					$("#page").bootstrapPaginator(options);
+					return;
+				}
 				if(st!=-1){
 				var end=data.indexOf("]");
 				var newdata=data.substring(st,end+1);

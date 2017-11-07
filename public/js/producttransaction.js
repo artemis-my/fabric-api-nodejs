@@ -36,17 +36,11 @@ $(function(){
 			getAll(1,3);
 		}
 	});
-	$("#downitem2").click(function(){
-		var name=$(titems[i]).parent().parent().children("td").eq(1).html();
-		var property=$(titems[i]).parent().parent().children("td").eq(2).html();
-		var args=[name,property];
-
-	});
 	$("#itemlist").on("click",".buy",function(){
-		var name=$(this).parent().parent().children("td").eq(1).html();
-		var price=$(this).parent().parent().children("td").eq(2).html();
-		var property=$(this).parent().parent().children("td").eq(3).html();
-		var owner=$(this).parent().parent().children("td").eq(4).html();
+		var name=$(this).parent().parent().children("td").eq(0).html();
+		var price=$(this).parent().parent().children("td").eq(1).html();
+		var property=$(this).parent().parent().children("td").eq(2).html();
+		var owner=$(this).parent().parent().children("td").eq(3).html();
 		var args=[name,property,price,owner];
 		buyItem(args);
 		});
@@ -66,7 +60,7 @@ function getItem(args){
 				tempsavelog=jsdata;
 				for(var i=0;i<jsdata.length;i++){
 					var record=jsdata[i].Record;
-					var $trs=$("<tr><td><input type='checkbox' class='titem' pid='"+i+"'></td><td>"+record.name+"</td><td>"+record.price+"</td><td>"+record.property+"</td><td>"+record.owner+"</td><td><a style='margin:0 5px;' class='buy'>购买</a></td></tr>");
+					var $trs=$("<tr><td>"+record.name+"</td><td>"+record.price+"</td><td>"+record.property+"</td><td>"+record.owner+"</td><td><a style='margin:0 5px;' class='buy'>购买</a></td></tr>");
 					$("#itemlist").append($trs);
 				}
 		},
@@ -108,7 +102,7 @@ function getAll(page,topic){
 					tempsavelog=jsdata;
 					for(var i=0;i<jsdata.length-1;i++){
 						var record=jsdata[i].Record;
-						var $trs=$("<tr><td><input type='checkbox' class='titem' pid='"+i+"'></td><td>"+record.name+"</td><td>"+record.price+"</td><td>"+record.property+"</td><td>"+record.owner+"</td><td><a style='margin:0 5px;' class='buy'>购买</a></td></tr>");
+						var $trs=$("<tr><td>"+record.name+"</td><td>"+record.price+"</td><td>"+record.property+"</td><td>"+record.owner+"</td><td><a style='margin:0 5px;' class='buy'>购买</a></td></tr>");
 						$("#itemlist").append($trs);
 					}
 					options.totalPages=jsdata[jsdata.length-1].totalpages;	
