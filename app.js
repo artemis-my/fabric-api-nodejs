@@ -29,7 +29,9 @@ var expressJWT = require('express-jwt');
 var jwt = require('jsonwebtoken');
 var bearerToken = require('express-bearer-token');
 var cors = require('cors');
-var upload=require('multer');
+var multer=require('multer');
+var fs=require('fs');
+var upload=multer({dest:'./uploads/'});
 var unless = require('express-unless');
 var mysql=require('mysql');
 var pool = mysql.createPool({     
@@ -73,7 +75,7 @@ app.set('secret', 'thisismysecret');
 app.use(expressJWT({
 	secret: 'thisismysecret'
 }).unless({
-	path: ['/users/login','/users/register','/users/regvali',"/","/users","/favicon.ico","/users/forgetpwd"]
+	path: ['/users/login','/users/register','/users/regvali','/','/users','/favicon.ico','/users/forgetpwd','/users/downloadlogfile']
 }));
 app.use(bearerToken());
 app.use(function(req, res, next) {
@@ -483,9 +485,68 @@ app.post('/channels/:channelName/chaincodes/:chaincodeName', function(req, res) 
 	});
 });
 //post log file and uplog
-app.post('/uplogfile',function(req,res){
-
-
+app.post('/uplogfile',upload.single('logfile'),function(req,res){
+	logger.debug('===========upload file=========');
+	var file=req.file;
+	var peers=req.body.peers;
+	var oldname=file.originalname;
+	var index=oldname.lastIndexOf('.');
+	var newname=oldname.substring(0,index)+"_"+Date.now();
+	var logname=newname;
+	var newpath='uploads/'+newname+oldname.substring(index);
+	fs.renameSync(file.path,newpath);
+	fs.readFile(newpath,function(err,data){
+		var logbody="";
+		if(err){
+			logbody="log text ..."
+		}
+		var ndata=data.toString();
+		if(ndata.length>50){
+			logbody=ndata.substring(0,50);
+		}else{
+			logbody=ndata;
+		}
+		var args=[logname,logbody];
+		invoke.invokeChaincode(peers, 'logchannel', 'logcc', 'uploadLog', args, req.username, req.orgname)
+		.then(function(message) {
+			res.send(message);
+		});
+	});
+	var sql='insert into logsinfo values(0,?,?,?)';
+	pool.query(sql,[logname,newpath,1],function(err,result){
+		if(err){
+          console.log('[SELECT ERROR] - ',err.message);
+          return;
+        }
+        if(result.affectedRows==1){
+        	logger.info("mysql save ok!");
+        }else{
+        	logger.info("mysql save false!");
+        }
+	});
+});
+//检查是否存在log文件
+app.get('/checklog',function(req,res){
+	logger.debug('==================== check if has logfile ==================');
+	var logname=req.query.logname;
+	var sql='select * from logsinfo where logname=?';
+	pool.query(sql,[logname],function(err,result){
+		if(err){
+          console.log('[SELECT ERROR] - ',err.message);
+          res.send("sql ERROR");
+          return;
+        }
+        if(result==''||result==null){
+        	res.send("no log");
+        }else{
+        	res.send(result[0].logpath);
+        }
+	});
+});
+//下载log文件
+app.post('/users/downloadlogfile',function(req,res){
+	var logpath=req.body.logpath;
+	res.download(logpath);
 });
 
 // Query on chaincode on target peers
@@ -631,6 +692,8 @@ app.get('/channels', function(req, res) {
 		res.send(message);
 	});
 });
+
+//分页返回请求信息
 app.get('/getallinfo/channels/:channelName/chaincodes/:chaincodeName',function(req,res){
 	logger.debug('==============get allinfo===============');
 	var page=req.query.page;//页码

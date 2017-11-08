@@ -26,7 +26,7 @@
 		//sessionStorage.token="<%=token%>";
 		//sessionStorage.user="<%=user%>";
 		//getAllLog("queryLogsByUser",sessionStorage.username);
-            $("#page").bootstrapPaginator(options);
+        $("#page").bootstrapPaginator(options);
 		getAll(1,1);
 		$("#sendbtn").click(function(){
 			$("#front").hide();
@@ -74,7 +74,7 @@
 					alert("请填写完整log信息后上传");
 				}
 			}else{
-				filedata.append("file",file.files[0]);
+				filedata.append("logfile",file[0].files[0]);
 				uplogfile(filedata);
 			}
 		});
@@ -125,7 +125,7 @@
 			var infoinfo=$(this).parent().parent().children("td").eq(2).html();
 			$("#infologname").html(infoname);
 			$("#infologinfo").html(infoinfo);
-			$("#oneloginfo").show();
+			checklog(infoname);
 		});
 		$("#closeinfo").click(function(){
 			$("#oneloginfo").hide();
@@ -147,6 +147,9 @@
 			}
 			getAllLog(fcn,args);
 		})
+		$("#download").click(function(){
+			DownLoad();
+		});
 	});
 	function delOneLog(name){
 		$.ajax({
@@ -275,3 +278,45 @@ function uplogfile(file){
 			}
 	});
 }
+function checklog(logname){
+	$.ajax({
+			type:"get",
+			url:"/checklog?logname="+logname,
+			dataType:"text",
+			beforeSend:function(xhr){
+				xhr.setRequestHeader("authorization","Bearer "+sessionStorage.token);
+				xhr.setRequestHeader("content-type","application/json");
+			},
+			success:function(data){
+				console.log(data);
+				if(data!='no log'){
+					$("#logpath").text(data);
+					$("#download").show();
+				}else{
+					$("#logpath").text("");
+					$("#download").hide();
+				}
+				$("#oneloginfo").show();				
+			},
+			error:function(data){
+				console.log(data);
+				$("#oneloginfo").show();
+			}	
+		});
+}
+function DownLoad() { 
+	var path=$("#logpath").text();
+    var form = $("<form>");   //定义一个form表单
+    form.attr('style', 'display:none');   //在form表单中添加查询参数
+    form.attr('target', '');
+    form.attr('method', 'post');
+    form.attr('action', '/users/downloadlogfile');
+
+    var input1 = $('<input>');
+    input1.attr('type', 'hidden');
+    input1.attr('name', 'logpath');
+    input1.attr('value', path);
+    $('body').append(form);  //将表单放置在web中 
+    form.append(input1);   //将查询参数控件提交到表单上
+    form.submit();
+ }
