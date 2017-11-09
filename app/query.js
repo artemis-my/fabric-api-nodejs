@@ -25,6 +25,7 @@ var logger = helper.getLogger('Query');
 
 var queryChaincode = function(peer, channelName, chaincodeName, args, fcn, startKey, endKey, username, org) {
 	var channel = helper.getChannelForOrg(org);
+	channel._name=channelName;
 	var client = helper.getClientForOrg(org);
 	var target = buildTarget(peer, org);
 	return helper.getRegisteredUsers(username, org).then((user) => {
