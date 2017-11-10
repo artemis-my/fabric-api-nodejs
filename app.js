@@ -224,28 +224,53 @@ app.route('/users/register')
          org:req.body.org,
          phonenumber:req.body.phonenumber
      }
-     var sql='insert into fabricusers values(0,?,?,?,?,10000)';
-     pool.query(sql,[user.username,user.password,user.phonenumber,user.org],function(err,result){
-        if(err){
-          console.log('[SELECT ERROR] - ',err.message);
-          return;
-        }
-        if(result.affectedRows=='1'){
-	        helper.getRegisteredUsers(user.username, user.org, true).then(function(response) {
-            if (response && typeof response !== 'string') {
-            	var peers;
-            	logger.info(user.username);
-            	invoke.invokeChaincode(peers, "itemchannel", "itemcc", "initUser", [], user.username, user.org);
-               res.redirect('/users/login');
-            } else {
-               res.redirect('/users/register');
-        	}
-            });         
-        }else{
-            res.redirect('/users/register');
-        }
+     helper.getRegisteredUsers(user.username, user.org, true).then(function(response) {
+         if (response && typeof response !== 'string') {
+             var peers;
+             logger.info(user.username);
+             invoke.invokeChaincode(peers, "itemchannel", "itemcc", "initUser", [], user.username, user.org).then(function(message){
+				if(message.indexOf("Failed")==-1){
+					initusertosql(user,res);
+				}else{
+                    invoke.invokeChaincode(peers, "itemchannel", "itemcc", "initUser", [], user.username, user.org).then(function(data){
+                        if(data.indexOf("Failed")==-1) {
+                            initusertosql(user,res);
+                        }else{
+                            res.writeHead(200, {'Content-type' : 'text/html;charset=utf-8'});
+                            res.write('<script>alert("注册失败");window.location.href="/users/register"</script>');
+                            res.end();
+						}
+					});
+				}
+			 });
+         } else {
+             res.writeHead(200, {'Content-type' : 'text/html;charset=utf-8'});
+             res.write('<script>alert("注册失败");window.location.href="/users/register"</script>');
+             res.end();
+         }
      });
  });
+function initusertosql(user,res){
+    var sql='insert into fabricusers values(0,?,?,?,?,10000)';
+    pool.query(sql,[user.username,user.password,user.phonenumber,user.org],function(err,result){
+        if(err){
+            console.log('[SELECT ERROR] - ',err.message);
+            res.writeHead(200, {'Content-type' : 'text/html;charset=utf-8'});
+            res.write('<script>alert("注册失败");window.location.href="/users/register"</script>');
+            res.end();
+            return;
+        }
+        if(result.affectedRows=='1'){
+            res.writeHead(200, {'Content-type' : 'text/html;charset=utf-8'});
+            res.write('<script>alert("注册成功");window.location.href="/users/login"</script>');
+            res.end();
+        }else{
+            res.writeHead(200, {'Content-type' : 'text/html;charset=utf-8'});
+            res.write('<script>alert("注册失败");window.location.href="/users/register"</script>');
+            res.end();
+        }
+    });
+}
  
  //忘记密码
  app.route('/users/forgetpwd')

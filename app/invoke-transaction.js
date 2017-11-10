@@ -28,6 +28,7 @@ var invokeChaincode = function(peerNames, channelName, chaincodeName, fcn, args,
 	logger.debug(util.format('\n============ invoke transaction on organization %s ============\n', org));
 	var client = helper.getClientForOrg(org);
 	var channel = helper.getChannelForOrg(org);
+	channel._name=channelName;
 	var targets = (peerNames) ? helper.newPeers(peerNames, org) : undefined;
 	var tx_id = null;
 

@@ -22,7 +22,8 @@ var tmpBalance;
 				//var start=data.indexOf("[");
 				//var end=data.indexOf("]");
 				//var balance=data.substring(start+1,end);
-				tmpBalance=data;
+				if(data.indexOf("Error")==-1){
+				tmpBalance=data;}else{tmpBalance="get fail";}
 				//console.log(tmpBalance);
 			},
 				error:function(data){
