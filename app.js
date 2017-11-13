@@ -582,15 +582,11 @@ app.get('/channels/:channelName/chaincodes/:chaincodeName', function(req, res) {
 	let args = req.query.args;
 	let fcn = req.query.fcn;
 	let peer = req.query.peer;
-	let startKey = req.query.startKey;
-	let endKey = req.query.endKey;
 
 	logger.debug('channelName : ' + channelName);
 	logger.debug('chaincodeName : ' + chaincodeName);
 	logger.debug('fcn : ' + fcn);
 	logger.debug('args : ' + args);
-	logger.debug('startKey : ' + startKey);
-	logger.debug('end : ' + endKey);
 
 	if (!chaincodeName) {
 		res.json(getErrorMessage('\'chaincodeName\''));
@@ -614,7 +610,7 @@ app.get('/channels/:channelName/chaincodes/:chaincodeName', function(req, res) {
 	args = JSON.parse(args);
 	logger.debug(args);
 
-	query.queryChaincode(peer, channelName, chaincodeName, args, fcn, startKey, endKey, req.username, req.orgname)
+	query.queryChaincode(peer, channelName, chaincodeName, args, fcn, req.username, req.orgname)
 	.then(function(message) {
 		res.send(message);
 	});
@@ -728,8 +724,6 @@ app.get('/getallinfo/channels/:channelName/chaincodes/:chaincodeName',function(r
 	var chaincodeName = req.params.chaincodeName;
 	var channelName = req.params.channelName;
 	var peer = req.query.peer;
-	let startKey = req.query.startKey;
-	let endKey = req.query.endKey;
 	var users=new Array();
 
  	//根据主题判断调用函数
@@ -766,7 +760,7 @@ app.get('/getallinfo/channels/:channelName/chaincodes/:chaincodeName',function(r
 		}else{
 			args=[users[0]];
 		}
-		query.queryChaincode(peer, channelName, chaincodeName,args, fcn, startKey, endKey, req.username, req.orgname).then(function(message) {
+		query.queryChaincode(peer, channelName, chaincodeName,args, fcn, req.username, req.orgname).then(function(message) {
 		records =records.concat(JSON.parse(message));
 		if (records.length==0) {
 			res.json(getErrorMessage('\'no record in the page\''));
@@ -812,7 +806,7 @@ app.get('/getallinfo/channels/:channelName/chaincodes/:chaincodeName',function(r
 				args=['',users[i]];
 			}
 			logger.debug(users[i]);
-			promisearray.push(query.queryChaincode(peer, channelName, chaincodeName, args, fcn, startKey, endKey, req.username, req.orgname).then(function(data){//logger.info(data);
+			promisearray.push(query.queryChaincode(peer, channelName, chaincodeName, args, fcn, req.username, req.orgname).then(function(data){//logger.info(data);
 return data;}));
 		} 
 		Promise.all(promisearray).then(function(data){
