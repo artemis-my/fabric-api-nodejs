@@ -123,8 +123,10 @@
 		$("#loglist").on("click",".look",function(){
 			var infoname=$(this).parent().parent().children("td").eq(1).html();
 			var infoinfo=$(this).parent().parent().children("td").eq(2).html();
+			var logtime=$(this).parent().parent().children("td").eq(3).html();
 			$("#infologname").html(infoname);
 			$("#infologinfo").html(infoinfo);
+			$("#logtime").html("时间:"+logtime);
 			checklog(infoname);
 		});
 		$("#closeinfo").click(function(){
@@ -229,7 +231,7 @@ function getAll(page,topic){
 				xhr.setRequestHeader("content-type","application/json");
 			},
 			success:function(data){
-				console.log(data);
+				//console.log(data);
 				var st=data.indexOf("no record in the page");
 				if(st==-1){
 					var jsdata=JSON.parse(data);

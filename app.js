@@ -18,12 +18,12 @@ var log4js = require('log4js');
 var logger = log4js.getLogger('SampleWebApp');
 var express = require('express');
 var session = require('express-session');
-var cookieParser = require('cookie-parser');
+//var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var path = require('path');
 var http = require('http');
 var util = require('util');
-var async=require('async');
+//var async=require('async');
 var app = express();
 var expressJWT = require('express-jwt');
 var jwt = require('jsonwebtoken');
@@ -812,10 +812,11 @@ app.get('/getallinfo/channels/:channelName/chaincodes/:chaincodeName',function(r
 				args=['',users[i]];
 			}
 			logger.debug(users[i]);
-			promisearray.push(query.queryChaincode(peer, channelName, chaincodeName, args, fcn, startKey, endKey, req.username, req.orgname).then(function(data){logger.info(data);return data;}));
+			promisearray.push(query.queryChaincode(peer, channelName, chaincodeName, args, fcn, startKey, endKey, req.username, req.orgname).then(function(data){//logger.info(data);
+return data;}));
 		} 
 		Promise.all(promisearray).then(function(data){
-			logger.info(data);
+			//logger.info(data);
 			for(var i=0;i<data.length;i++){
 				records=records.concat(JSON.parse(data[i]));
 			}
