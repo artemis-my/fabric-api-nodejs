@@ -111,7 +111,8 @@ function getAll(page,topic){
 					$("#itemlist").append($trs);
 					options.totalPages=1;
 				}
-				$("#page").bootstrapPaginator(options);
+				if(page==1){
+				$("#page").bootstrapPaginator(options);}
 			},
 			error:function(data){
 			console.log(data);

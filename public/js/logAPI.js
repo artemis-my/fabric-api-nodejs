@@ -246,7 +246,8 @@ function getAll(page,topic){
 					$("#loglist").append($trs);
 					options.totalPages=1;
 				}
-				$("#page").bootstrapPaginator(options);
+				if(page==1){
+				$("#page").bootstrapPaginator(options);}
 			},
 			error:function(data){
 			console.log(data);
