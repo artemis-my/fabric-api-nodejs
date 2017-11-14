@@ -197,7 +197,7 @@ $("#loglist").empty();
 					return;
 				}
 				if(st!=-1){
-				var end=data.indexOf("]");
+				var end=data.lastIndexOf("]");
 				var newdata=data.substring(st,end+1);
 				var jsdata=JSON.parse(newdata);
 				tempsavelog=jsdata;

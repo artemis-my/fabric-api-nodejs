@@ -48,7 +48,7 @@ $(function(){
 function getItem(args){
 	$.ajax({
 		type:"get",
-		url:"/channels/itemchannel/chaincodes/itemcc?peer=peer1&fcn=queryItemsByItemOwner&args="+args,
+		url:"/channels/itemchannel/chaincodes/itemcc?peer=peer1&fcn=queryItemsByItemOwner&args=%5B%22"+args[0]+"%22%2c%22"+args[1]+"%22%5D",
 		dataType:"text",
 		beforeSend:function(xhr){
 				xhr.setRequestHeader("authorization","Bearer "+sessionStorage.token);
