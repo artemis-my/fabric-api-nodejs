@@ -23,6 +23,7 @@ var bodyParser = require('body-parser');
 var path = require('path');
 var http = require('http');
 var util = require('util');
+var crypto = require('crypto');
 //var async=require('async');
 var app = express();
 var expressJWT = require('express-jwt');
@@ -161,6 +162,7 @@ app.post('/users', function(req, res) {
 	});
 });
 // 登录
+var orgMap={'org1':'A省公司','org2':'B省公司','org3':'C省公司'};
 app.route('/users/login')
  .get(function(req, res) {
      res.render('login', { title: '用户登录' });
@@ -178,17 +180,19 @@ app.route('/users/login')
             res.render('login',{loginerr:'nameerr'});
         }else{
             if(result[0].userpassword==password){
+			var uorg=result[0].org;
                 var user={
                   username:result[0].username,
                   password:result[0].userpassword,
-                  orgName:result[0].org
+                  orgName:result[0].org,
+                  orgRname:orgMap[uorg]
                 }
                 var token = jwt.sign({
                 exp: Math.floor(Date.now() / 1000) + parseInt(hfc.getConfigSetting('jwt_expiretime')),
                 username: user.username,
                 orgName: user.orgName
                 }, app.get('secret'));
-                res.render('mainpage',{token:token,user:user});
+                res.render('mainpage',{token:token,username:user.username,userorg:user.orgRname});
             }else{
                 res.render('login',{loginerr:'pwderr'});
             }
@@ -362,6 +366,8 @@ function initusertosql(user,res){
  		res.render('rightproducttransaction');
  	}else if(topic=="accountinfo"){
  		res.render('rightaccountinfo');
+ 	}else if(topic=="help"){
+ 		res.render('help')
  	}
  });
  
@@ -525,12 +531,9 @@ app.post('/uplogfile',upload.single('logfile'),function(req,res){
 		if(err){
 			logbody="log text ..."
 		}
-		var ndata=data.toString();
-		if(ndata.length>50){
-			logbody=ndata.substring(0,50);
-		}else{
-			logbody=ndata;
-		}
+		var hasher=crypto.createHash('md5');
+		hasher.update(data);
+		logbody=hasher.digest('hex');
 		var args=[logname,logbody];
 		invoke.invokeChaincode(peers, 'logchannel', 'logcc', 'uploadLog', args, req.username, req.orgname)
 		.then(function(message) {

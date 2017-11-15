@@ -34,9 +34,15 @@ $(function(){
 	$("#leftmenu").on('click','#accountinfo',function(){
 		getright("accountinfo");
 	});
+	$("#leftmenu").on('click','#help',function(){
+		getright("help");
+	});
 	$("#logout").click(function(){
 		sessionStorage.clear();
 		window.location.href="/users/login";
+	});
+	$("#user").click(function(){
+		getright("accountinfo");
 	});
 
 });
