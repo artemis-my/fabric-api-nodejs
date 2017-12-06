@@ -255,7 +255,7 @@ app.route('/users/register')
      });
  });
 function initusertosql(user,res){
-    var sql='insert into fabricusers values(0,?,?,?,?,10000)';
+    var sql='insert into fabricusers values(0,?,?,?,?)';
     pool.query(sql,[user.username,user.password,user.phonenumber,user.org],function(err,result){
         if(err){
             console.log('[SELECT ERROR] - ',err.message);
