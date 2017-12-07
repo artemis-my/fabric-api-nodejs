@@ -368,6 +368,8 @@ function initusertosql(user,res){
  		res.render('rightaccountinfo');
  	}else if(topic=="help"){
  		res.render('help')
+ 	}else if(topic=="apihelp"){
+ 		res.render('apihelp')
  	}
  });
  

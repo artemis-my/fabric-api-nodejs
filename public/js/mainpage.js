@@ -8,6 +8,9 @@ $(function(){
 		getleft("product");
 		getright("orderproduct");
 	}).hover(over,out);
+	$("#apihelp").click(function(){
+		getright("apihelp");
+	}).hover(over,out);
 	$("#leftmenu").on('click','#explorer1',function(){
 		$("#rightbody").empty();
 		//$("#rightbody").html("<iframe width=800px height=800px src=></iframe>")
