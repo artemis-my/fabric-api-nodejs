@@ -9,9 +9,12 @@ $(function(){
 		getright("orderproduct");
 	}).hover(over,out);
 	$("#apihelp").click(function(){
+		getleft("leftapi");
 		getright("apihelp");
 	}).hover(over,out);
 	$("#leftmenu").on('click','#explorer1',function(){
+		$(".nav").children("li").removeClass("active");
+		$(this).addClass("active");
 		$("#rightbody").empty();
 		//$("#rightbody").html("<iframe width=800px height=800px src=></iframe>")
 		$explo=$("<iframe width=90% height=100%></iframe>");
@@ -19,6 +22,8 @@ $(function(){
 		$("#rightbody").append($explo);
 	});
 	$("#leftmenu").on('click','#explorer2',function(){
+		$(".nav").children("li").removeClass("active");
+		$(this).addClass("active");
 		$("#rightbody").empty();
 		//$("#rightbody").html("<iframe width=800px height=800px src=></iframe>")
 		$explo=$("<iframe width=90% height=100%></iframe>");
@@ -26,18 +31,28 @@ $(function(){
 		$("#rightbody").append($explo);
 	});
 	$("#leftmenu").on('click','#orderlog',function(){
+		$(".nav").children("li").removeClass("active");
+		$(this).addClass("active");
 		getright("orderlog");
 	});
 	$("#leftmenu").on('click','#orderproduct',function(){
+		$(".nav").children("li").removeClass("active");
+		$(this).addClass("active");
 		getright("orderproduct");
 	});
 	$("#leftmenu").on('click','#producttransaction',function(){
+		$(".nav").children("li").removeClass("active");
+		$(this).addClass("active");
 		getright("producttransaction");
 	});
 	$("#leftmenu").on('click','#accountinfo',function(){
+		$(".nav").children("li").removeClass("active");
+		$(this).addClass("active");
 		getright("accountinfo");
 	});
 	$("#leftmenu").on('click','#help',function(){
+		$(".nav").children("li").removeClass("active");
+		$(this).addClass("active");
 		getright("help");
 	});
 	$("#logout").click(function(){

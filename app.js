@@ -341,6 +341,8 @@ function initusertosql(user,res){
  		res.render('leftlog');
  	}else if(topic=="product"){
  		res.render('leftproduct');
+ 	}else if(topic=="leftapi"){
+ 		res.render('leftapi');
  	}
  });
  //请求主体界面
