@@ -98,6 +98,16 @@ h4
 	page-break-after:avoid;
 	font-size:14.0pt;
 	font-family:"Cambria",serif;}
+p.MsoTitle, li.MsoTitle, div.MsoTitle
+	{mso-style-link:"标题 字符";
+	margin-top:12.0pt;
+	margin-right:0cm;
+	margin-bottom:3.0pt;
+	margin-left:0cm;
+	text-align:center;
+	font-size:16.0pt;
+	font-family:"Cambria",serif;
+	font-weight:bold;}
 p.MsoCommentText, li.MsoCommentText, div.MsoCommentText
 	{mso-style-link:"批注文字 字符";
 	margin:0cm;
@@ -4592,7 +4602,81 @@ lang=EN-US>peer</span>节点数，最新区块数及区块详情，交易数及�
 <p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
 </div>
 <div class="WordSection1" style='layout-grid:15.6pt;width:85%;height:100%;overflow:scroll;margin-left:10px;display: none;' id="ca">
-	区块链部署
+	<p class=MsoTitle align=left style='text-align:left'><span style='font-family:
+宋体'>智能合约部署</span></p>
+
+<p class=MsoNormal><span style='font-family:宋体;background:white'>智能合约是用程序实现合约的内容，并且这个程序是事件驱动、有状态的。智能合约是早就出现的概念，早于区块链提出。但是，区块链的出现为智能合约的实现提供了一个非常理想的环境。而在</span><span
+lang=EN-US style='background:white'>Fabric</span><span style='font-family:宋体;
+background:white'>中，</span><span lang=EN-US style='background:white'>Chaincode</span><span
+style='font-family:宋体;background:white'>就是开发者实现智能合约的方式。</span></p>
+
+<p class=MsoNormal><span style='font-family:宋体'>我们知道</span><span lang=EN-US>blockchain</span><span
+style='font-family:宋体'>系统是一个网络，由若干结点构成。</span><span lang=EN-US>Fabric</span><span
+style='font-family:宋体'>区块链系统也不例外，而要运行</span><span lang=EN-US>Chaincode</span><span
+style='font-family:宋体'>程序，就要把它首先部署到</span><span lang=EN-US>fabric</span><span
+style='font-family:宋体'>系统的结点上。也就是说，</span><span lang=EN-US>Chaincode</span><span
+style='font-family:宋体'>程序是依赖于</span><span lang=EN-US>fabric</span><span
+style='font-family:宋体'>系统结点的。在区块链部署这一板块中已经详细的介绍了</span><span lang=EN-US>fabric</span><span
+style='font-family:宋体'>系统部署，在此就不再赘述。</span></p>
+
+<p class=MsoNormal><span lang=EN-US>1.</span><span style='font-family:宋体'>进入</span><span
+lang=EN-US>peer</span><span style='font-family:宋体'>节点</span></p>
+
+<p class=MsoNormal><span lang=EN-US>docker exec -it peer0.org1.example.com bash</span></p>
+
+<p class=MsoNormal><span lang=EN-US>2.</span><span style='font-family:宋体'>进入需要编译的智能合约的目录，如下示例：</span></p>
+
+<p class=MsoNormal><span lang=EN-US>cd
+/opt/gopath/src/github.com/hyperledger/fabric/examples/chaincode/go/marbles02</span></p>
+
+<p class=MsoNormal><span lang=EN-US>3.</span><span style='font-family:宋体'>进行编译</span></p>
+
+<p class=MsoNormal><span lang=EN-US>go build //</span><span style='font-family:
+宋体'>编译代码，生成</span><span lang=EN-US>marbles_chaincode</span><span
+style='font-family:宋体'>可执行程序。编译成功将不显示任何信息，失败会显示失败信息</span></p>
+
+<p class=MsoNormal><span lang=EN-US>4.</span><span style='font-family:宋体'>发布智能合约</span></p>
+
+<p class=MsoNormal><span lang=EN-US>CORE_CHAINCODE_ID_NAME=mycc CORE_PEER_ADDRESS=127.0.0.1:7051
+&nbsp;./marbles_chaincode</span></p>
+
+<p class=MsoNormal><span lang=EN-US>//</span><span style='font-family:宋体'>发布</span><span
+lang=EN-US>chaincode</span><span style='font-family:宋体'>，并为其注册一个名称</span><span
+lang=EN-US>CORE_CHAINCODE_ID_NAME</span><span style='font-family:宋体'>。如果发布成功会在打印信息中显示</span><span
+lang=EN-US>[shim] DEBU : Received REGISTERED, ready for invocations</span></p>
+
+<p class=MsoNormal><span lang=EN-US>5.</span><span style='font-family:宋体'>调用智能合约</span></p>
+
+<p class=MsoNormal align=left style='margin-left:5.25pt;text-align:left;
+text-indent:-5.25pt'><span lang=EN-US>peer chaincode instantiate -n mycc -C mychannel
+-c '{&quot;Args&quot;: []}' -o orderer.example.com:7050 -P &quot;OR ('Org1MSP.member','Org2MSP.member')&quot;</span></p>
+
+<p class=MsoNormal align=left style='margin-left:4.5pt;text-align:left;
+text-indent:-4.5pt'><span lang=EN-US style='font-size:9.0pt;font-family:Consolas;
+color:#24292E;background:white'>//</span><span style='font-size:9.0pt;
+font-family:宋体;color:#24292E;background:white'>实例化智能合约</span></p>
+
+<p class=MsoNormal align=left style='margin-left:4.5pt;text-align:left;
+text-indent:-4.5pt'><span lang=EN-US style='font-size:9.0pt;font-family:Consolas;
+color:#24292E;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal align=left style='margin-left:5.25pt;text-align:left;
+text-indent:-5.25pt'><span lang=EN-US>peer chaincode invoke -o orderer.example.com:7050
+-C mychannel -n mycc -c '{&quot;Args&quot;:[&quot;initMarble&quot;,&quot;marble1&quot;,&quot;blue&quot;,&quot;35&quot;,&quot;tom&quot;]}'</span></p>
+
+<p class=MsoNormal align=left style='margin-left:5.25pt;text-align:left;
+text-indent:-5.25pt'><span lang=EN-US>//</span><span style='font-family:宋体'>调用智能合约</span></p>
+
+<p class=MsoNormal align=left style='margin-left:5.25pt;text-align:left;
+text-indent:-5.25pt'><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal align=left style='margin-left:5.25pt;text-align:left;
+text-indent:-5.25pt'><span lang=EN-US>peer chaincode query -o orderer.example.com:7050
+-C mychannel -n mycc -c
+'{&quot;Args&quot;:[&quot;readMarble&quot;,&quot;marble1&quot;]}'</span></p>
+
+<p class=MsoNormal align=left style='margin-left:5.25pt;text-align:left;
+text-indent:-5.25pt'><span lang=EN-US>//</span><span style='font-family:宋体'>查询智能合约</span></p>
 </div>
 
 <div class="WordSection1" style='layout-grid:15.6pt;width:85%;height:100%;overflow:scroll;margin-left:10px;display: none;' id="api">
