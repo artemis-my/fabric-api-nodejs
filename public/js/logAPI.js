@@ -56,7 +56,7 @@
 							xhr.setRequestHeader("content-type","application/json");
 						},
 						success:function(data){
-							console.log(data);
+							//console.log(data);
 							if(data.indexOf("Fail")!=-1||data.indexOf("Error")!=-1){
 								alert("上传失败");
 							}else{
@@ -232,6 +232,7 @@ function getAll(page,topic){
 			},
 			success:function(data){
 				//console.log(data);
+                $("#loglist").empty();
 				var st=data.indexOf("no record in the page");
 				if(st==-1){
 					var jsdata=JSON.parse(data);
@@ -269,7 +270,7 @@ function uplogfile(file){
 				xhr.setRequestHeader("authorization","Bearer "+sessionStorage.token);
 			},
 			success:function(data){
-				console.log(data);
+				//console.log(data);
 				if(data.indexOf("Fail")!=-1||data.indexOf("Error")!=-1){
 					alert("上传失败");
 				}else{
@@ -278,6 +279,9 @@ function uplogfile(file){
 				getAll(1,1);
 				$("#front").show();
 				$("#sendlogdiv").hide();
+                $("#logfile").val("");
+				$("#logname2").val("");
+				$("#log2").val("");
 			}
 	});
 }
@@ -291,7 +295,7 @@ function checklog(logname){
 				xhr.setRequestHeader("content-type","application/json");
 			},
 			success:function(data){
-				console.log(data);
+				//console.log(data);
 				if(data!='no log'){
 					$("#logpath").text(data);
 					$("#download").show();
