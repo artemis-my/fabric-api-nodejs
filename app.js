@@ -343,6 +343,8 @@ function initusertosql(user,res){
  		res.render('leftproduct');
  	}else if(topic=="leftapi"){
  		res.render('leftapi');
+ 	}else if(topic=="phonescams"){
+ 		res.render('leftphonescams');
  	}
  });
  //请求主体界面
@@ -372,6 +374,8 @@ function initusertosql(user,res){
  		res.render('help')
  	}else if(topic=="apihelp"){
  		res.render('apihelp')
+ 	}else if(topic=="phonescams"){
+ 		res.render('rightphonescams');
  	}
  });
  

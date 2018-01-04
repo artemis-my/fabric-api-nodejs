@@ -12,6 +12,10 @@ $(function(){
 		getleft("leftapi");
 		getright("apihelp");
 	}).hover(over,out);
+	$("#phonescams").click(function(){
+		getleft("phonescams");
+		getright("phonescams");
+	}).hover(over,out);
 	$("#leftmenu").on('click','#explorer1',function(){
 		$(".nav").children("li").removeClass("active");
 		$(this).addClass("active");
