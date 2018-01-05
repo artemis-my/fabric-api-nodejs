@@ -59,6 +59,11 @@ $(function(){
 		$(this).addClass("active");
 		getright("help");
 	});
+	$("#leftmenu").on('click','#phonemark',function(){
+		$(".nav").children("li").removeClass("active");
+                $(this).addClass("active");
+		getright('phonescams');	
+	})
 	$("#logout").click(function(){
 		sessionStorage.clear();
 		window.location.href="/users/login";
