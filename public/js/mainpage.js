@@ -71,7 +71,6 @@ $(function(){
 	$("#user").click(function(){
 		getright("accountinfo");
 	});
-
 });
 function getleft(topic){
 	$("#leftmenu").empty();
