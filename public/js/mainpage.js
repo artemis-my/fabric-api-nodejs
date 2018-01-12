@@ -21,7 +21,7 @@ $(function(){
 		$(this).addClass("active");
 		$("#rightbody").empty();
 		//$("#rightbody").html("<iframe width=800px height=800px src=></iframe>")
-		$explo=$("<iframe width=90% height=100%></iframe>");
+		$explo=$("<iframe width=100% height=100%></iframe>");
 		$explo.attr("src","//223.105.0.146:4001/");
 		$("#rightbody").append($explo);
 	});
@@ -30,7 +30,7 @@ $(function(){
 		$(this).addClass("active");
 		$("#rightbody").empty();
 		//$("#rightbody").html("<iframe width=800px height=800px src=></iframe>")
-		$explo=$("<iframe width=90% height=100%></iframe>");
+		$explo=$("<iframe width=100% height=100%></iframe>");
 		$explo.attr("src","//223.105.0.146:4002/");
 		$("#rightbody").append($explo);
 	});
