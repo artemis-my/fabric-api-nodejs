@@ -44,8 +44,8 @@
 }
 .btnb{background-color: #1C8AF4;color:white;}
 .input1{margin: 0 14px;border:solid 1px #dddddd;height: 32px;}
-.rightbody{padding-left:180px;height: 100%;height:-moz-calc(100% - 50px);height:-webkit-calc(100% - 50px);height:calc(100% - 50px);min-height:500px;background-color: white;width:100%;min-width:800px;overflow:hidden;}
-.bodydiv1{height:70px;position: relative;left:5%;top:30px;border: solid 1px #dddddd;padding: 18px;width: 80%}
+.rightbody{padding-left:180px;height: 100%;height:-moz-calc(100% - 50px);height:-webkit-calc(100% - 50px);height:calc(100% - 50px);min-height:500px;background-color: white;width:100%;min-width:800px;overflow-x:hidden;}
+.bodydiv1{height:70px;position: relative;left:5%;top:30px;border: solid 1px #dddddd;padding: 18px;width: 90%}
 .btn2{color: #1C8AF4; background-color: white; border: solid 1px  #1C8AF4;}
 td{overflow:hidden;white-space:nowrap;text-overflow: ellipsis;}
 .pagination{position:relative;left:60%;top:5px;margin:20px 0 0 0}
@@ -59,6 +59,7 @@ td{overflow:hidden;white-space:nowrap;text-overflow: ellipsis;}
 .topbar{height:50px; background-color:#20283F; line-height:50px;min-width: 980px;}
 .userinputdiv{float:left;color: black;}
 .buttondiv{float:right;margin-right: 10px;}
+.table-div{position: relative;top:20px;width:90%;left:5%;}
 </style>
 	 </head>
  <body style="padding:0 0; margin:0 0; background-color:#F8F9F9;overflow:auto;">
@@ -98,7 +99,7 @@ td{overflow:hidden;white-space:nowrap;text-overflow: ellipsis;}
 		</button>
 		<button class="btn btn2" id="dellog">删除日志</button>
 	</div>
-	<div style="position: relative;top:20px;width:80%;left:5%">
+	<div class="table-div">
         <table data-toggle="table" class="table-striped" style="width:100%;table-layout:fixed;">
         	<colgroup>
         		<col style="width:10%">
