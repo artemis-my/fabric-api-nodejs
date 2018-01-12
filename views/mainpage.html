@@ -56,10 +56,13 @@ td{overflow:hidden;white-space:nowrap;text-overflow: ellipsis;}
 #logtime{color:#dddddd;font-size:8px;float:right;margin:5px 30px;}
 #downtips2{width: 600px;height: 220px;position: absolute;left: 30%;top: 30%;text-align: center;background-color:white;z-index: 20;display: none;}
 #oneloginfo{display:none;position: absolute;left: 20%;top: 15%;width: 600px;height: 500px;z-index: 20;background-color:white;border:solid 1px #cccccc;}
+.topbar{height:50px; background-color:#20283F; line-height:50px;min-width: 980px;}
+.userinputdiv{float:left;color: black;}
+.buttondiv{float:right;margin-right: 10px;}
 </style>
 	 </head>
  <body style="padding:0 0; margin:0 0; background-color:#F8F9F9;">
-<div style="height:50px; background-color:#20283F; line-height:50px;"> 
+<div class="topbar"> 
 	<img src="/image/loginimg.svg" style="width:29px; height:21px;position:relative;left:12px;">
 	 <a style="font-weight: 200;font-size: 18px;color:white;position:relative;left:10px;">区块链系统</a>
 		<div class="tab" id="apihelp"> 能力开放平台介绍 </div>
@@ -81,11 +84,11 @@ td{overflow:hidden;white-space:nowrap;text-overflow: ellipsis;}
 <div class="rightbody" id="rightbody">
 	<div id="front">
 	<div class="bodydiv1">
-		<div style="float:left;color: black;width: 800px">
+		<div class="userinputdiv">
 			日志名<input type="text" placeholder="请输入..." id="logname" class="input1">
 			用户名<input type="text" placeholder="请输入..." id="username" class="input1">
 		</div>
-		<div style="display: inline-block;position: relative;left: 10px">
+		<div class="buttondiv">
 			<button class="btn btnb" id="getlog">查询日志</button>
 		</div>
 	</div>
