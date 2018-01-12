@@ -77,9 +77,11 @@ $(function(){
 	$("#canceldown").click(function(){
 		$("#downtips").hide();
 		$("#downtips2").hide();
+		$(".titem").prop("checked",false);
+		$("#seltotal").prop("checked",false);
 	});
 	$("#itemlist").on("click",".downitem3",function(){
-		$(this).parent().parent().children(":first").children().attr("checked",true);
+		$(this).parent().parent().children(":first").children().prop("checked",true);
 		$("#downtips").show();
 		$("#downtips2").show();
 		});

@@ -115,6 +115,7 @@
 			$("#downtips").hide();
 			$("#downtips2").hide();
 			$(".tlog").prop("checked",false);
+			$("#seltotal").prop("checked",false);
 		});
 		$("#loglist").on("click",".delone",function(){
 			$(this).parent().parent().children(":first").children().prop("checked",true);
