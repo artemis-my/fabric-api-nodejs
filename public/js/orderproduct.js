@@ -18,7 +18,7 @@
 		           	 }
 	       		 },
                 onPageClicked:function(e,originalEvent,type,page){
-					getAll(page,1);
+					getAll(page,4);
                 }
             }
 $(function(){
@@ -104,6 +104,9 @@ function getOneItem(name){
 					var $trs=$("<tr><td><input type='checkbox' class='titem' pid='"+i+"'></td><td>"+record.name+"</td><td>"+record.property+"</td><td>"+record.price+"</td><td><a style='margin:0 5px;' class='downitem3'>下链</a></td></tr>");
 					$("#itemlist").append($trs);
 				}
+			options.totalPages=1;
+                        $("#page").bootstrapPaginator(options);
+
 		},
 		error:function(data){
 			console.log(data);

@@ -1,4 +1,5 @@
 	var tempsavelog;
+	var htopic=1;
 	var options={
                 bootstrapMajorVersion:3,    //版本
                 currentPage:1,    //当前页数
@@ -19,7 +20,7 @@
 		           	 }
 	       		 },
                 onPageClicked:function(e,originalEvent,type,page){
-					getAll(page,1);
+					getAll(page,htopic);
                 }
             }
 	$(function(){
@@ -27,7 +28,8 @@
 		//sessionStorage.user="<%=user%>";
 		//getAllLog("queryLogsByUser",sessionStorage.username);
         $("#page").bootstrapPaginator(options);
-		getAll(1,1);
+		htopic=1;
+		getAll(1,htopic);
 		$("#sendbtn").click(function(){
 			$("#front").hide();
 			$("#sendlogdiv").show();
@@ -62,7 +64,8 @@
 							}else{
 								alert("上传成功");
 							}
-							getAll(1,1);
+							htopic=1;
+							getAll(1,htopic);
 							$("#front").show();
 							$("#sendlogdiv").hide();
 							$("#logfile").val("");
@@ -147,7 +150,8 @@
 				fcn="queryLogsByUser";
 				args=useraccount;
 			}else{
-				getAll(1,2);
+				htopic=2;
+				getAll(1,htopic);
 				return;			
 			}
 			getAllLog(fcn,args);
@@ -173,7 +177,8 @@
 					}else{
 						
 					}
-					getAll(1,1);
+					htopic=1;
+					getAll(1,htopic);
 					//getAllLog();
 					//$("#downtips").hide();
 				}
@@ -217,6 +222,9 @@ $("#loglist").empty();
 					var $trs=$("<tr><td><input type='checkbox' class='tlog' pid='1'></td><td>"+jsdata.name+"</td><td>"+jsdata.logContent+"</td><td>"+jsdata.uploadTime+"</td><td>"+jsdata.user+"</td><td><a style='margin:0 5px;' class='look'>查看</a><a style='margin:0 5px;' class='delone'>删除</a></td></tr>");
 					$("#loglist").append($trs);
 				}
+				options.totalPages=1;
+                                $("#page").bootstrapPaginator(options);
+
 			},
 			error:function(data){
 			console.log(data);
@@ -279,7 +287,8 @@ function uplogfile(file){
 				}else{
 					alert("上传成功");
 				}
-				getAll(1,1);
+				htopic=1;
+				getAll(1,htopic);
 				$("#front").show();
 				$("#sendlogdiv").hide();
                 $("#logfile").val("");
